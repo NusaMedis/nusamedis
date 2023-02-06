@@ -1,0 +1,58 @@
+alter table
+
+CREATE TABLE klinik.klinik_poli_antrian
+(
+  reg_antri_id bigint NOT NULL,
+  reg_antri_nomer bigint,
+  id_dep character varying(255),
+  reg_antri_suara character(1),
+  id_cust_usr character varying(255),
+  id_poli character varying(255),
+  reg_antri_tanggal date,
+  id_loket character(1),
+  reg_panggil character varying(1) DEFAULT 'n'::character varying,
+  id_klinik_waktu_tunggu character varying(255),
+  antri_aktif character varying(1) NOT NULL DEFAULT 'n'::character varying,
+  id_reg character varying(255),
+  CONSTRAINT klinik_poli_antrian_pkey PRIMARY KEY (reg_antri_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE klinik.klinik_poli_antrian OWNER TO its;
+
+ALTER TABLE klinik.klinik_registrasi ADD COLUMN reg_dokter_rujuk character varying(255);
+
+ALTER TABLE "global".global_customer_user ADD COLUMN cust_usr_berat_badan character varying(255);
+
+CREATE TABLE apotik.apotik_obat_anjuran
+(
+  anjuran_id character varying(255) NOT NULL,
+  anjuran_nama character varying(255),
+  id_dep character varying(255),
+  CONSTRAINT apotik_obat_anjuran_pkey PRIMARY KEY (anjuran_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+ALTER TABLE "global".global_departemen ADD COLUMN dep_antrian_poli character varying(255);
+
+
+CREATE TABLE apotik.apotik_obat_aturan
+(
+  aturan_id character varying(255) NOT NULL,
+  aturan_nama character varying(255),
+  id_dep character varying(255),
+  CONSTRAINT apotik_obat_aturan_pkey PRIMARY KEY (aturan_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+ALTER TABLE apotik.apotik_penjualan_detail ADD COLUMN id_aturan character varying(255);     
+ALTER TABLE apotik.apotik_penjualan_detail ADD COLUMN id_anjuran character varying(255);
+ALTER TABLE apotik.apotik_penjualan_detail ADD COLUMN penjualan_detail_racikan_khusus character varying(255);
+ALTER TABLE "global".global_customer_user ADD COLUMN cust_usr_alergi character varying(255);
+ALTER TABLE logistik.logistik_stok_dep_periode ADD COLUMN stok_dep_periode_create character varying(255);

@@ -1,0 +1,114 @@
+
+
+
+#camera1{
+	background:url('../img/cam_bg.jpg') repeat-y;
+	border:1px solid #f0f0f0;
+	height:350px;
+	width:250px;
+	position:fixed;
+  bottom: -350px;
+	left:80%;
+	margin-left:-500px;
+
+	-moz-border-radius:4px 4px 0 0;
+	-webkit-border-radius:4px 4px 0 0;
+	border-radius:4px 4px 0 0;
+	
+	-moz-box-shadow:0 0 4px rgba(0,0,0,0.6);
+	-webkit-box-shadow:0 0 4px rgba(0,0,0,0.6);
+	box-shadow:0 0 4px rgba(0,0,0,0.6);
+}
+
+.camTop1{
+	background:url('../img/cam.png') no-repeat center center;
+	/*
+  width:100%;
+	height:66px;
+	position:absolute;
+	top:0;
+	left:0;
+	cursor:pointer;
+  */
+}
+
+.settings1{
+	background:url('../img/settings.png') no-repeat;
+	cursor: pointer;
+	height: 28px;
+	position: absolute;
+	right: 37px;
+	top: 648px;
+	width: 30px;
+}
+
+.settings1:hover{
+	background-position:left bottom;
+}
+
+#screen1{
+	width:250px;
+	height:200px;
+	margin: 66px auto 22px;
+	background:#ccc;
+	line-height: 360px;
+  text-align: center;
+	color:#666;
+}
+
+.buttonPane1{
+	text-align: center;
+}
+
+.blueButton1,
+.greenButton1{
+	background:url('../img/buttons.png') no-repeat;
+	text-shadow:1px 1px 1px #277c9b;
+	color:#fff !important;
+	width:99px;
+	height:38px;
+	border:none;
+	text-decoration:none;
+	display:inline-block;
+	font-size: 16px;
+	line-height: 32px;
+	text-align: center;
+	margin: 0 4px;
+}
+
+.greenButton1{
+	background:url('../img/buttons.png') no-repeat right top;
+	text-shadow:1px 1px 1px #498917;
+}
+
+.blueButton1:hover,
+.greenButton1:hover{
+	background-position:left bottom;
+	text-decoration:none !important;
+}
+
+.greenButton1:hover{
+	background-position:right bottom;
+}
+
+.blueButton1:active,
+.greenButton1:active{
+	position:relative;
+	bottom:-1px;
+}
+
+.hidden1{
+	display:none;
+}
+
+
+
+a, a:visited {
+	text-decoration:none;
+	outline:none;
+	color:#54a6de;
+}
+
+a:hover{
+	text-decoration:underline;
+}

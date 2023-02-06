@@ -1,0 +1,63 @@
+@font-face{ font-family: fontdefault; src: url('../../font/sansation.ttf')}
+*{ font-family: fontdefault;}
+body{ margin:0; padding:0; background-color:#000; color:#333;}
+.inputField {border:1px solid #e0e0e0; height:25px;}
+.inputField:hover{-moz-box-shadow: 0px 0px 6px 2px #c4c4c4; }
+#body {
+width:600px;
+height:240px;
+margin:0 auto; padding-left:200px; padding-top:60px;
+text-align:center;
+}
+#bg{
+-webkit-box-shadow: inset 0px 3px 3px#666, inset 0px -3px 3px #666;
+   -moz-box-shadow: inset 0px 3px 3px#666, inset 0px -3px 3px #666;
+	 -o-box-shadow: inset 0px 3px 3px#666, inset 0px -3px 3px #666;
+		box-shadow: inset 0px 3px 3px#666, inset 0px -3px 3px #666;
+}
+.button { color: #fff; padding: 3px 14px 10px; background-color: #333; border: none; margin-right: 25px; position: relative;
+-webkit-user-select: none;
+-webkit-box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.45), 0px 2px 2px rgba(0, 0, 0, 0.25);
+-moz-box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.45), 0px 2px 2px rgba(0, 0, 0, 0.25);
+box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.45), 0px 2px 2px rgba(0, 0, 0, 0.25);
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+-webkit-text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+-moz-text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+}
+.inputField{
+	-webkit-transition: .5s ;
+	   -moz-transition: .5s ;
+	     -o-transition: .5s ;
+			transition: .5s ;
+}
+.button:active { position: relative; top: 3px;
+-webkit-box-shadow: inset 0px -3px 1px rgba(0, 0, 0, .1), inset 0 0px 3px rgba(0, 0, 0, 0.9);
+-moz-box-shadow: inset 0px -3px 1px rgba(0, 0, 0, .1), inset 0 0px 3px rgba(0, 0, 0, 0.9);
+box-shadow: inset 0px -3px 1px rgba(0, 0, 0, .1), inset 0 0px 3px rgba(0, 0, 0, 0.9);
+}
+#bg {
+background:url(gambar/bgbg.gif);
+width:100%;
+height:300px;
+z-index:999;
+margin:0 auto; padding:0;
+margin-top:10%;
+text-align:center;
+}
+.judul {
+width:100%;
+float:left;
+color:#333;
+font-size:35px;
+}
+.inputan {
+width:500px; padding-left:100px; padding-top:30px;
+float:left;
+}
+.button{
+cursor:pointer; height:25px;
+}
+

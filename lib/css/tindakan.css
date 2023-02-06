@@ -1,0 +1,42 @@
+
+#sliderWrap {
+margin: 0 auto;
+width: 420px;
+}
+
+#slider {
+position: absolute;
+background-image:url(image/slider_orange1.png);
+background-repeat:no-repeat;
+background-position: bottom;
+width: 455px;
+height: 170px;
+margin-top: -150px;
+}
+
+#slider img {
+border: 0;
+}
+
+#sliderContent {
+margin: 1px 0px 0px 20px;
+position: absolute;
+text-align:center;
+font-weight:bold;
+padding: 10px;
+}
+
+#header {
+margin: 0 auto;
+width: 450px;
+background-color: #F0F0F0;
+height: 200px;
+padding: 10px;
+}
+
+#openCloseWrap {
+position:absolute;
+margin: 155px 0 0 200px;
+font-size:12px;
+font-weight:bold;
+}

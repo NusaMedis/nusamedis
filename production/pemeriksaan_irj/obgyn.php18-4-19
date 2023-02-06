@@ -1,0 +1,1027 @@
+<? 
+$sql = "select * from klinik.klinik_anamnesa_pilihan where id_anamnesa=".QuoteValue(DPE_CHAR,'9dafa78dca4a01f50d21fbc884a5eecb')."
+        order by anamnesa_pilihan_urut asc, anamnesa_pilihan_id asc";
+$rs = $dtaccess->Execute($sql);
+$dataAnamnesaDetail = $dtaccess->FetchAll($rs);
+?>
+
+<script type="text/javascript" src="obgyn.js"></script>
+<script>
+  $(function () {
+    var tbe = $('#9dafa78dca4a01f50d21fbc884a5eecb');              
+    tbe.datagrid();
+  });
+  
+  function saveItem(index){
+    var row = $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('getRows')[index];
+    var url = row.isNewRecord ? 'saveEasyui.php' : 'updateEasyui.php?func=update&id='+row.anamnesa_tb_id;
+    $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('getRowDetail',index).find('form').form('submit',{
+        url: url,
+        onSubmit: function(param){
+            param.rawat_id = row.rawat_id;
+            param.anamnesa_id = row.anamnesa_id;
+            param.poli_id = row.poli_id;
+            param.reg_id = row.reg_id;
+            return $(this).form('validate');
+        },
+        success: function(data){
+            data = eval('('+data+')');
+            data.isNewRecord = false;
+            $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('collapseRow',index);
+            $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('updateRow',{
+                index: index,
+                row: data
+            });
+        }
+    });
+  }
+
+  function cancelItem(index){
+      var row = $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('getRows')[index];
+      if (row.isNewRecord){
+          $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('deleteRow',index);
+      } else {
+          $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('collapseRow',index);
+      }
+  }
+  function destroyItem(){
+      var row = $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('getSelected');
+      if (row){
+          $.messager.confirm('Konfirmasi','Anda Yakin?',function(r){
+              if (r){
+                  var index = $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('getRowIndex',row);
+                  $.get('updateEasyui.php?func=destroy&id='+row.anamnesa_tb_id,{},function(){
+                      $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('deleteRow',index);
+                  });
+              }
+          });
+      }
+  }
+  function newItem(){
+    var reg_id = $('#regId').val();  
+    var rawat_id = $('#rawat_id').val();  
+    var poli_id = $('#id_poli').val();  
+      $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('appendRow',{isNewRecord:true, rawat_id: rawat_id, poli_id: poli_id, reg_id: reg_id, anamnesa_id: '9dafa78dca4a01f50d21fbc884a5eecb'});
+        var index = $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('getRows').length - 1;
+        $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('expandRow', index);
+        $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('selectRow', index);
+        $('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('fixDetailRowHeight',index);
+  }
+</script>
+
+<div title="Asuhan Medis Awal" style="padding:5px">
+  <div class="form-horizontal form-label-left">
+    <div class="x_title" >
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <label class="col-md-11 col-sm-11 col-xs-11"><h2>Asuhan Medis Awal</h2></label>
+        <div class="col-md-1 col-sm-1 col-xs-1"><h2><?php echo $tglSekarang; ?></h2></div>
+      </div>
+      <hr>
+    </div>
+    <form id="form_obgyn" method="POST" class="form-horizontal form-label-left" action="<?php echo $_SERVER["PHP_SELF"]?>">
+      <input type="hidden" name="rawat_id" id="rawat_id" value="">
+      <div class="col-md-12">
+        <div class="col-md-6">
+          <h4>Kasus Obsetri</h4>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <div class="col-md-12">
+                  <label style="float: right;">Keluhan Utama</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <textarea name="keluhanUtama" id="keluhanUtama" style="min-width: 230px; min-height: 200px"></textarea>
+              </div>
+              <div class="col-md-2">
+                <input type="text" name="berapa_lama" id="berapa_lama" class="form-control" style="width: 75%;">
+              </div>
+              <div class="col-md-1">
+                <label>Bulan</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-offset-2 col-md-5">
+                <select name="select_keluhan_utama" id="select_keluhan_utama" class="form-control">
+                  <option value=""></option>
+                  <option value="Mengekuarkan Cairan">Mengekuarkan Cairan</option>
+                  <option value="Pendarahan">Pendarahan</option>
+                </select>
+              </div>
+              <div class="col-md-5">
+                <div class="col-md-7">
+                  <label>Berapa Lama</label>
+                </div>
+                <div class="col-md-5">
+                  <input type="text" name="keluhan_utama_bulan" id="keluhan_utama_bulan" class="form-control" style="width: 80%;">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-offset-5 col-md-2">
+                <div class="col-md-offset-1 col-md-11">
+                  <label>&nbsp;Pendarahan</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="col-md-5">
+                  <input type="checkbox" value="true" name="pendarahan_sedikit" id="pendarahan_sedikit"> Sedikit
+                </div>
+                <div class="col-md-5">
+                  <input type="checkbox" value="true" name="pendarahan_banyak" id="pendarahan_banyak"> Banyak
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-offset-2 col-md-4">
+                <div class="col-md-5">
+                  <input type="checkbox" value="true" name="mual" id="mual"> Mual
+                </div>
+                <div class="col-md-5">
+                  <input type="checkbox" value="true" name="muntah" id="muntah"> Muntah
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-offset-2 col-md-4">
+                <div class="col-md-5">
+                  <input type="checkbox" value="true" name="pusing" id="pusing"> Pusing
+                </div>
+                <div class="col-md-5">
+                  <input type="checkbox" value="true" name="perut_sakit" id="perut_sakit"> Perut Sakit
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <div class="col-md-12">
+                    <label style="float: right;">HPHT</label>
+                  </div>
+                </div>
+                <div class='input-group date col-md-8' id='datepicker'>
+                  <input type='text' class="form-control" data-inputmask="'alias': 'dd-mm-yyyy'"name="hpht" id="hpht" >
+                  <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <div class="col-md-12">
+                    <label style="float: right;">HPL</label>
+                  </div>
+                </div>
+                <div class='input-group date col-md-8' id='datepicker2'>
+                  <input type='text' class="form-control" data-inputmask="'alias': 'dd-mm-yyyy'"name="hpl" id="hpl" >
+                  <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <h4>Riwayat Kehamilan Yang Lalu</h4>
+          <div class="form-group">
+            <div class="col-md-12">
+              <table id="9dafa78dca4a01f50d21fbc884a5eecb" style="width:100%;" toolbar="#toolbar_tbe" idField="anamnesa_tb_id" rownumbers="true" fitColumns="true" singleSelect="true">
+                <thead>
+                  <tr>
+                    <? foreach($dataAnamnesaDetail as $fields): ?>
+                      <th field="<?= $fields['anamnesa_pilihan_id'] ?>" width="50"><?= $fields['anamnesa_pilihan_nama'] ?></th>
+                    <? endforeach; ?>
+                    <!-- // $dataAnamnesaDetail -->
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                </tbody>
+              </table> 
+              <div id="toolbar_tbe">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newItem()">Baru</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="$('#9dafa78dca4a01f50d21fbc884a5eecb').datagrid('reload')">Refresh</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyItem()">Hapus</a>
+              </div>
+            </div>
+          </div>
+          <h4>Data Objektif</h4>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label style="float: right;">Keadaan Umum Pasien</label>
+              </div>
+              <div class="col-md-8">
+                <select name="keadaan_umum_pasien" id="keadaan_umum_pasien" class="form-control">
+                  <option value=""></option>
+                  <option value="Baik">Baik</option>
+                  <option value="Sedang">Sedang</option>
+                  <option value="Kurang">Kurang</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label style="float: right;">Kesadaran</label>
+              </div>
+              <div class="col-md-8">
+                <select name="kesadaran" id="kesadaran" class="form-control">
+                  <option value=""></option>
+                  <option value="Composmentis">Composmentis</option>
+                  <option value="Somnolen">Somnolen</option>
+                  <option value="Apatis">Apatis</option>
+                  <option value="Coma">Coma</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="float: right;">Tekanan Darah Sistole</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="tekanan_darah_sistole" id="tekanan_darah_sistole" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>mm/Hg</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="float: right;">Tekanan Darah Diastole</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="tekanan_darah_diastole" id="tekanan_darah_diastole" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>mm/Hg</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="float: right;">Nadi</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="nadi" id="nadi" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>x/Menit</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="float: right;">Pernafasan</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="pernafasan" id="pernafasan" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>x/Menit</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="float: right;">Suhu Badan</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="suhu_badan" id="suhu_badan" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>°C</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="float: right;">Berat Badan</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="berat_badan" id="berat_badan" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>Kg</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="float: right;">Tinggi Badan</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="tinggi_badan" id="tinggi_badan" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>Cm</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-4">
+                  <label style="float: right;">Leher (TVJ)</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="leher_tvj" id="leher_tvj" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>Cm</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label style="float: right;">Mata</label>
+              </div>
+              <div class="col-md-8">
+                <select name="mata" id="mata" class="form-control">
+                  <option value=""></option>
+                  <option value="Normal">Normal</option>
+                  <option value="Conjunctiva merah">Conjunctiva Merah</option>
+                  <option value="Conjunctiva pucat">Conjunctiva Pucat</option>
+                  <option value="Sklera ikteric">Sklera ikteric</option>
+                  <option value="Pandangan kabur">Pandangan Kabur</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label style="float: right;">Leher</label>
+              </div>
+              <div class="col-md-8">
+                <select name="leher" id="leher" class="form-control">
+                  <option value=""></option>
+                  <option value="Pembesaran kel. Tiroid">Pembersaran kel. tiroid</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label style="float: right;">Payudara</label>
+              </div>
+              <div class="col-md-8">
+                <select name="payudara" id="payudara" class="form-control">
+                  <option value=""></option>
+                  <option value="Pengeluaran ASI">Pengeluaran ASI</option>
+                  <option value="Putting datar/tenggelam">Putting datar/tenggelam</option>
+                  <option value="Putting susu menonjol">Putting susu menonjol</option>
+                  <option value="Lain-lain">Lain-lain</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <h4>Letak Anak</h4>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <input type="checkbox" value="true" name="kepala" id="kepala"> Kepala
+              </div>
+              <div class="col-md-2">
+                <input type="checkbox" value="true" name="sungsang" id="sungsang"> Sungsang
+              </div>
+              <div class="col-md-2">
+                <input type="checkbox" value="true" name="oblique" id="oblique"> Oblique
+              </div>
+              <div class="col-md-2">
+                <input type="checkbox" value="true" name="lintang" id="lintang"> Lintang
+              </div>
+              <div class="col-md-4">
+                <div class="col-md-5">
+                  <label style="float: right;">Tinggi FU</label>
+                </div>
+                <div class="col-md-5">
+                  <input type="text" name="tinggi_fu" id="tinggi_fu" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>cm</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h4>Pemeriksaan USG</h4>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="col-md-1">
+                  <label>GS</label>
+                </div>
+                <div class="col-md-4">
+                  <select name="gs0" id="gs0" class="form-control">
+                    <option value=""></option>
+                    <option value="+">+</option>
+                    <option value="-">-</option>
+                  </select>
+                </div>
+                <div class="col-md-1">
+                  <label>-</label>
+                </div>
+                <div class="col-md-4">
+                  <input type="text" name="gs2" id="gs2" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>mm</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <!-- <div class="col-md-7"> -->
+                  <label class="form-label-left col-md-2">CRL</label>
+                  <div class="col-md-3">
+                    <input type="text" name="crl" id="crl" value="" placeholder="" class="form-control">
+                  </div>
+                  <label class="form-label-left col-md-1">mm</label>
+                <!-- </div>
+                <div class="col-md-5"> -->
+                  <label class="form-label-left col-md-2">DJJ</label>
+                  <div class="col-md-3">
+                    <select name="djj" id="djj" class="form-control">
+                      <option value=""></option>
+                      <option value="+">+</option>
+                      <option value="-">-</option>
+                    </select>
+                  </div>
+                <!-- </div> -->
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>&nbsp; Usia Kehamilan</label>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-9">
+                  <input type="text" name="usia_kehamilan_minggu" id="usia_kehamilan_minggu" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-3">
+                  <label>Minggu</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-9">
+                  <input type="text" name="usia_kehamilan_hari" id="usia_kehamilan_hari" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-3">
+                  <label>Hari</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>&nbsp; Janin</label>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-3">
+                  <input type="checkbox" value="true" name="janin_tunggal" id="janin_tunggal"> Tunggal
+                </div>
+                <div class="col-md-3">
+                  <input type="checkbox" value="true" name="janin_kembar" id="janin_kembar"> Kembar
+                </div>
+                <div class="col-md-3">
+                  <input type="checkbox" value="true" name="janin_hidup" id="janin_hidup"> Hidup
+                </div>
+                <div class="col-md-3">
+                  <input type="checkbox" value="true" name="janin_iufd" id="janin_iufd"> IUFD
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>&nbsp; Letak Janin</label>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-3">
+                  <input type="checkbox" value="true" name="letak_janin_kepala" id="letak_janin_kepala"> Kepala
+                </div>
+                <div class="col-md-3">
+                  <input type="checkbox" value="true" name="letak_janin_sungsang" id="letak_janin_sungsang"> Sungsang
+                </div>
+                <div class="col-md-3">
+                  <input type="checkbox" value="true" name="letak_janin_melintang" id="letak_janin_melintang"> Melintang
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>&nbsp; Ukuran</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-4">
+                <div class="col-md-3">
+                  <label>BPD</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="bpd" id="bpd" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-2">
+                  <label>mm</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-2">
+                  <label>FL</label>
+                </div>
+                <div class="col-md-7">
+                  <input type="text" name="fl" id="fl" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-2">
+                  <label>mm</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-3">
+                  <label>AC</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="ac" id="ac" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-2">
+                  <label>mm</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-3">
+                  <label>EFW </label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" name="efw" id="efw" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-2">
+                  <label>gram</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>&nbsp; Usia Kehamilan</label>
+              </div>
+              <div class="col-md-2">
+                <div class="col-md-9">
+                  <input type="text" name="usia_kehamilan_minggu1" id="usia_kehamilan_minggu1" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-3">
+                  <label>Minggu</label>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="col-md-9">
+                  <input type="text" name="usia_kehamilan_hari1" id="usia_kehamilan_hari1" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-3">
+                  <label>Hari</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>&nbsp; Plasenta</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>&nbsp; insersi</label>
+              </div>
+              <div class="col-md-8">
+                <div class="col-md-2">
+                  <input type="checkbox" value="true" name="insersi_fudus" id="insersi_fudus"> Fundus
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox" value="true" name="insersi_corpus" id="insersi_corpus"> Corpus
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox" value="true" name="insersi_sbr" id="insersi_sbr"> SBR
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox" value="true" name="insersi_anterior" id="insersi_anterior"> Anterior
+                </div>
+                <div class="col-md-3">
+                  <input type="checkbox" value="true" name="insersi_posterior" id="insersi_posterior"> Posterior
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-4">
+                <div class="col-md-3">
+                  <label>Grade</label>
+                </div>
+                <div class="col-md-7">
+                  <select name="gs1" id="gs1" class="form-control">
+                    <option value=""></option>
+                    <option value="I">I</option>
+                    <option value="II">II</option>
+                    <option value="III">III</option>
+                    <option value="IV">IV</option>
+                    <option value="V">V</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>Ketuban</label>
+              </div>
+              <div class="col-md-5">
+                <div class="col-md-4">
+                  <input type="checkbox" value="true" name="janin_tunggal" id="janin_tunggal"> Tunggal
+                </div>
+                <div class="col-md-4">
+                  <input type="checkbox" value="true" name="janin_kembar" id="janin_kembar"> Kembar
+                </div>
+                <div class="col-md-4">
+                  <input type="checkbox" value="true" name="janin_hidup" id="janin_hidup"> Hidup
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-3">
+                  <label>AFI</label>
+                </div>
+                <div class="col-md-9">
+                  <input type="text" name="" value id="" value="" placeholder="" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>HPL/TP</label>
+              </div>
+              <div class='input-group date col-md-3' id='datepicker3'>
+                <input type='text' class="form-control" data-inputmask="'alias': 'dd-mm-yyyy'"name="hpltp" id="hpltp" >
+                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>Lain - lain</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" id ="lain-lain" name="lain-lain"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <label>Pemeriksaan Penunjang</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="pemeriksaan_penunjang" id="pemeriksaan_penunjang"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <label>Analisa/Dianosa</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="analisa_diagnosa" id="analisa_diagnosa"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <label>Planning / Penatalaksanaan</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="planning_penatalaksanaan" id="planning_penatalaksanaan"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <label>Lap Tindakan</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="lap_tindakan" id="lap_tindakan"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h4>Kasus Ginekogi</h4>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>Keluhan Utama</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="keluhan_utama" id="keluhan_utama" style="min-width: 230px; min-height: 200px"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>Gangguan Haid</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-8">
+                <div class="col-md-offset-1 col-md-2" >
+                  <label>Aminore</label>
+                </div>
+                <div class="col-md-3">
+                  <input type="text" name="amenore_hari" id="amenore_hari" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>Hari</label>
+                </div>
+                <div class="col-md-3">
+                  <input type="text" name="amenore_bulan" id="amenore_bulan" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>Bulan</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-5">
+                <div class="col-md-offset-1 col-md-3" >
+                  <label>Haid Lama</label>
+                </div>
+                <div class="col-md-5">
+                  <input type="text" name="haid_lama_hari" id="haid_lama_hari" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>Hari</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-7">
+                <div class="col-md-offset-1 col-md-6">
+                  <label>Haid Lama dan Banyak</label>
+                </div>
+                <div class="col-md-3">
+                  <input type="text" name="haid_lama_banyak_hari" id="haid_lama_banyak_hari" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>Hari</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-5">
+                <div class="col-md-offset-1 col-md-4">
+                  <label>Haid : 1 Bulan</label>
+                </div>
+                <div class="col-md-5">
+                  <input type="text" name="haid_lama_bulan" id="haid_lama_bulan" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>Kali</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-offset-3 col-md-5">
+                <div class="col-md-5">
+                  <label>Terus menerus berapa lama</label>
+                </div>
+                <div class="col-md-5">
+                  <input type="text" name="terus_menerus_lama" id="terus_menerus_lama" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-1">
+                  <label>Hari</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>Pendarahan</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <div class="col-md-offset-1 col-md-5">
+                  <input type="checkbox" name="sedikit" id="sedikit" value="true"> Sedikit
+                </div>
+                <div class="col-md-6">
+                  <input type="checkbox" name="banyak" id="banyak" value="true"> Banyak
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-6">
+                  <label>Terus menerus berapa lama</label>
+                </div>
+                <div class="col-md-4">
+                  <input type="text" name="terus_menerus_hari" id="terus_menerus_hari" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-2">
+                  <label>Hari</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <label>Flour Albus</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-10">
+                <div class="col-md-2">
+                  <div class="col-md-offset-2">
+                    <input type="checkbox" name="gatal" id="gatal" value="true"> Gatal
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox" name="tidak_gatal" id="tidak_gatal" value="true"> Tidak Gatal
+                </div>
+                <div class="col-md-8">
+                  <div class="col-md-2">
+                    <input type="checkbox" name="bau" id="bau" value="true"> Bau
+                  </div>
+                  <div class="col-md-3">
+                    <input type="checkbox" name="tidak_bau" id="tidak_bau" value="true"> Tidak Bau
+                  </div>
+                  <div class="col-md-7">
+                    <div class="col-md-7">
+                      <input type="checkbox" name="campur_darah" id="campur_darah" value="true"> Campur Darah
+                    </div>
+                    <div class="col-md-5">
+                      <input type="checkbox" name="lainnya" id="lainnya" value="true"> Lainnya
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="col-md-5">
+                  <div class="col-md-offset-1 col-md-11">
+                    <label>Sudah Berapa Lama</label>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <input type="text" name="sudah_berapa_lama" id="sudah_berapa_lama" value="" placeholder="" class="form-control">
+                </div>
+                <div class="col-md-2">
+                  <label>Hari</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <div class="col-md-offset-2">
+                  <input type="checkbox" name="perut_sakitt" id="perut_sakitt" value="true"> Perut Sakit
+                </div>
+              </div>
+              <div class="col-md-10">
+                <div class="col-md-2">
+                  <input type="checkbox" name="tumor" id="tumor" value="true"> Tumor
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox" name="myom_uteri" id="myom_uteri" value="true"> Myom Uteri
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox" name="kista_ovari" id="kista_ovari" value="true"> Kista Ovari
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox" name="ca_cx" id="ca_cx" value="true"> Ca CX
+                </div>
+                <div class="col-md-2">
+                  <input type="checkbox" name="lainnyaa" id="lainnyaa" value="true"> Lainnya
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <h4>USG GINEKOLOGI</h4>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="usg_ginekologi" id="usg_ginekologi"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <label>Pemeriksaan Dalam/VT</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="pemerisaan_dalam_vt" id="pemerisaan_dalam_vt"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <label>Pemeriksaan Penunnjang</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="pemerisaan_penunjang" id="pemerisaan_penunjang"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <label>Analisa/Diagnosa</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="analisa_diagnosaa" id="analisa_diagnosaa"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <label>Planning/Penatalaksanaan</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="planning_penatalaksanaana" id="planning_penatalaksanaana"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="col-md-3">
+                <label>Tindakan</label>
+              </div>
+              <div class="col-md-6 col-sm-8 col-xs-12">
+                <textarea class="form-control" name="tindakan" id="tindakan"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix">&nbsp;</div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <button type="submit" class="btn btn-primary pull-right">Simpan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+	</div>
+</div>

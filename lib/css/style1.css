@@ -1,0 +1,31 @@
+#tablewrapper {width:720px; margin:0 auto}
+#tableheader {height:35px}
+.search {float:left; padding:5px; border:1px solid #c6d5e1; background:#fff}
+#tableheader select {float:left; font-size:11px; width:100px; padding:2px 2px 2px}
+#tableheader input {float:left; font-size:11px; width:150px; padding:2px 2px 2px; margin-left:0px}
+.details {float:right; padding-top:10px}
+.details div {float:left; margin-left:0px; font-size:10px}
+.tinytable {width:720px; border-left:1px solid #000000; border-top:1px solid #000000; border-bottom:none}
+.tinytable th {background:url(image/header-bg1.gif); text-align:left; color:#000000; border:1px solid #000000; border-right:none}
+.tinytable th h3 {font-size:10px; padding:1px 3px 3px}
+.tinytable td {padding:2px 3px 3px; border-bottom:1px solid #000000; border-right:1px solid #000000}
+.tinytable .head h3 {background:url(image/sort.gif) 7px center no-repeat; cursor:pointer; padding-left:16px}
+.tinytable .desc, .sortable .asc {background:url(image/header-selected-bg1.gif)}
+.tinytable .desc h3 {background:url(image/desc.gif) 7px center no-repeat; cursor:pointer; padding-left:16px}
+.tinytable .asc h3 {background:url(image/asc.gif) 7px  center no-repeat; cursor:pointer; padding-left:16px}
+.tinytable .head:hover, .tinytable .desc:hover, .tinytable .asc:hover {color:#b6ffa8}
+.tinytable .evenrow td {background:#b6ffa8}
+.tinytable .oddrow td {background:#d2ffc9}
+.tinytable td.evenselected {background:#b6ffa8}
+.tinytable td.oddselected {background:#d2ffc9}
+.tinytable tfoot {background:#fff; font-weight:bold}
+.tinytable tfoot td {padding:6px 8px 8px}
+#tablefooter {height:15px; margin-top:15px}
+#tablenav {float:left}
+#tablenav img {cursor:pointer}
+#tablenav div {float:left; margin-right:15px}
+#tablelocation {float:right; font-size:10px}
+#tablelocation select {margin-right:3px}
+#tablelocation div {float:left; margin-left:10px}
+.page {margin-top:2px; font-style:italic}
+#selectedrow td {background:#09ba00}

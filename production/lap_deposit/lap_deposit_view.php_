@@ -1,0 +1,271 @@
+<?php
+require_once("../penghubung.inc.php");
+require_once($ROOT . "lib/login.php");
+require_once($ROOT . "lib/datamodel.php");
+require_once($ROOT . "lib/dateLib.php");
+require_once($ROOT . "lib/tampilan.php");
+require_once($ROOT . "lib/currency.php");
+
+$view = new CView($_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING']);
+$dtaccess = new DataAccess();
+$auth = new CAuth();
+$depId = $auth->GetDepId();
+$userName = $auth->GetUserName();
+$depNama = $auth->GetDepNama();
+
+// if(!$auth->IsAllowed("kassa_informasi_lap_deposit",PRIV_CREATE)){
+//       die("access_denied");
+//       exit(1);
+//  } else if($auth->IsAllowed("kassa_informasi_lap_deposit",PRIV_CREATE)===1){
+//       echo"<script>window.parent.document.location.href='".$ROOT."login.php?msg=Login First'</script>";
+//       exit(1);
+//  } 
+
+
+$_x_mode = "New";
+$thisPage = "lap_deposit_view.php";
+
+
+// KONFIGURASI
+$sql = "select * from global.global_departemen where dep_id =" . QuoteValue(DPE_CHAR, $depId);
+$rs = $dtaccess->Execute($sql);
+$konfigurasi = $dtaccess->Fetch($rs);
+$_POST["dep_bayar_reg"] = $konfigurasi["dep_bayar_reg"];
+$_POST["dep_kasir_tindakan"] = $konfigurasi["dep_kasir_tindakan"];
+
+$table = new InoTable("table", "100%", "left");
+
+
+$cetakPage = "lap_deposit_cetak.php?tgl_awal=" . $_POST["tgl_awal"] . "&tgl_akhir=" . $_POST["tgl_akhir"]."&posting=".$_POST['posting'];
+//if($_POST["btnLanjut"])   
+//{   
+if (!$_POST["tgl_awal"]) $_POST["tgl_awal"] = date('d-m-Y');
+if (!$_POST["tgl_akhir"]) $_POST["tgl_akhir"] = date('d-m-Y');
+if ($_GET["tgl_awal"]) $_POST["tgl_awal"] =  $_GET["tgl_awal"];
+if ($_GET["tgl_akhir"]) $_POST["tgl_akhir"] =  $_GET["tgl_akhir"];
+
+if ($_POST["tgl_awal"]) {
+  $sql_where[] = "date(deposit_history_tgl)>=" . QuoteValue(DPE_DATE, date_db($_POST["tgl_awal"]));
+}
+if ($_POST["tgl_akhir"]) {
+  $sql_where[] = "date(deposit_history_tgl)<=" . QuoteValue(DPE_DATE, date_db($_POST["tgl_akhir"]));
+}
+if ($_POST['posting'] == 'y') $sql_where[] .= "a.id_pembayaran is not null";
+if ($_POST['posting'] == 'n') $sql_where[] .= "a.id_pembayaran is null";
+$sql_where[] = "1=1";
+
+if ($sql_where[0])
+  $sql_where = implode(" and ", $sql_where);
+
+//if($_POST["btnLanjut"])   
+//{   
+$sql = "SELECT c.cust_usr_kode, a.deposit_history_no_bukti, c.cust_usr_nama, a.deposit_history_tgl, 
+jbayar_nama, jenis_nama, a.id_pembayaran
+from klinik.klinik_deposit_history a 
+left join klinik.klinik_deposit b on b.id_cust_usr=a.id_cust_usr 
+left join global.global_customer_user c on c.cust_usr_id=a.id_cust_usr 
+left join global.global_jenis_bayar d on d.jbayar_id = a.id_jbayar 
+left join klinik.klinik_registrasi e on e.id_pembayaran = a.id_pembayaran 
+left join global.global_jenis_pasien f on f.jenis_id = e.reg_jenis_pasien 
+where deposit_history_flag <> 'M' and reg_utama is null and " . $sql_where;
+$sql .= " group by c.cust_usr_id, a.id_pembayaran, a.deposit_history_no_bukti, a.deposit_history_tgl, 
+jbayar_nama, jenis_nama, a.deposit_history_when_create order by deposit_history_when_create asc";
+$rs = $dtaccess->Execute($sql);
+$dataTable = $dtaccess->FetchAll($rs);
+// echo $sql;
+
+//Saldo Awal
+$sql = "select sum(deposit_history_nominal) as total from klinik.klinik_deposit_history where deposit_history_tgl < ".QuoteValue(DPE_DATE, date_db($_POST['tgl_awal']));
+$SaldoAwal = $dtaccess->Fetch($sql);
+
+$sql = "select * from global.global_jenis_pasien order by jenis_nama asc";
+$JenisPasien = $dtaccess->FetchAll($sql);
+
+$tableHeader = "Laporan Deposit";
+//echo $sql;
+
+if ($_POST['btnExcel']) {
+  header("Content-type: application/vnd-ms-excel");
+  header("Content-Disposition: attachment; filename=Laporan Deposit Yang Belum Diposting.xls");
+}
+
+if (!$_POST['btnExcel']) {
+?>
+
+  <link rel="stylesheet" type="text/css" href="<?php echo $ROOT; ?>lib/script/jquery/fancybox/jquery.fancybox-1.3.4.css" />
+  <script src="<?php echo $ROOT; ?>lib/script/jquery/fancybox/jquery.easing-1.3.pack.js"></script>
+  <script src="<?php echo $ROOT; ?>lib/script/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("a[rel=sepur]").fancybox({
+        'width': '60%',
+        'height': '110%',
+        'autoScale': false,
+        'transitionIn': 'none',
+        'transitionOut': 'none',
+        'type': 'iframe'
+      });
+    });
+  </script>
+
+  <script type="text/javascript" src="<?php echo $ROOT; ?>lib/script/scroll_ipad2.js"></script>
+  <!DOCTYPE html>
+  <html lang="en">
+  <?php require_once($LAY . "header.php") ?>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <?php require_once($LAY . "sidebar.php") ?>
+
+        <!-- top navigation -->
+        <?php require_once($LAY . "topnav.php") ?>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="clearfix"></div>
+            <!-- row filter -->
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                <?php } ?>
+                <div class="x_title">
+                  <h2><?php echo $tableHeader ?></h2>
+                  <div class="clearfix"></div>
+                </div>
+                <?php if (!$_POST['btnExcel']) { ?>
+                  <div class="x_content">
+                    <form name="frmFind" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+                      <div class="col-md-4 col-sm-6 col-xs-12">
+                        <label class="control-label col-md-12 col-sm-12 col-xs-12">Periode Tanggal (DD-MM-YYYY)</label>
+                        <div class='input-group date' id='datepicker'>
+                          <input name="tgl_awal" type='text' class="form-control" value="<?php if ($_POST['tgl_awal']) { echo $_POST['tgl_awal']; } else { echo date('d-m-Y'); } ?>" />
+                          <span class="input-group-addon">
+                            <span class="fa fa-calendar">
+                            </span>
+                          </span>
+                        </div>
+
+                        <label class="control-label col-md-12 col-sm-12 col-xs-12">Sampai Tanggal (DD-MM-YYYY)</label>
+                        <div class='input-group date' id='datepicker2'>
+                          <input name="tgl_akhir" type='text' class="form-control" value="<?php if ($_POST['tgl_akhir']) { echo $_POST['tgl_akhir']; } else { echo date('d-m-Y'); } ?>" />
+                          <span class="input-group-addon">
+                            <span class="fa fa-calendar">
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-4 col-sm-6 col-xs-12">
+                        <label class="control-label col-md-12 col-sm-12 col-xs-12">Sudah Diposting / Belum Diposting</label>
+                        <select class="form-control" name="posting">
+                          <option value="--">[ Sudah Diposting / Belum Diposting ]</option>
+                          <option value="y" <?php if ($_POST['posting'] == 'y') echo "selected"; ?>>[ Sudah Diposting ]</option>
+                          <option value="n" <?php if ($_POST['posting'] == 'n') echo "selected"; ?>>[ Belum Diposting ]</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4 col-sm-6 col-xs-12">
+                        <label class="control-label col-md-12 col-sm-12 col-xs-12">&nbsp;</label>
+                        <input type="submit" name="btnLanjut" value="Lanjut" class="btn btn-primary">
+                        <input type="submit" name="btnExcel" value="Export Excel" class="btn btn-success">
+                        <a href="<?php echo $cetakPage; ?>" target="_blank" class="btn btn-success">Cetak</a>
+                      </div>
+                    </form>
+
+                  <?php } ?>
+                  <form name="frmView" method="POST" action="<?php echo $editPage; ?>">
+
+                    <!-- <?php echo $table->RenderView($tbHeader, $tbContent, $tbBottom); ?> -->
+                    <table class="table table-bordered" border="1" width="100%">
+                      <thead>
+                        <tr>
+                          <th style="text-align: center;">No Medrec</th>
+                          <th style="text-align: center;">No Bukti Transaksi</th>
+                          <th style="text-align: center;">Nama Pasien</th>
+                          <th style="text-align: center;">Tanggal Posting</th>
+                          <th style="text-align: center;">Tanggal Penerimaan UM</th>
+                          <th style="text-align: center;">Debet</th>
+                          <th style="text-align: center;">Kredit</th>
+                          <th style="text-align: center;">Saldo</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td colspan="7">SALDO AWAL</td>
+                          <td align="right"><?php echo currency_format($SaldoAwal['total']); ?></td>
+                        </tr>
+                        <?php 
+                          for ($i=0; $i < count($dataTable); $i++) { 
+                            $sql = "select * from klinik.klinik_deposit_history where id_pembayaran = ".QuoteValue(DPE_CHAR, $dataTable[$i]['id_pembayaran'])."
+                                    and deposit_history_flag = 'M' limit 1";
+                            $TglKredit = $dtaccess->Fetch($sql);
+
+                            $sql = "select sum(deposit_history_nominal) as deposit_history_nominal from klinik.klinik_deposit_history where id_pembayaran = ".QuoteValue(DPE_CHAR, $dataTable[$i]['id_pembayaran'])." and deposit_history_flag = 'M'";
+                            $masuk = $dtaccess->Fetch($sql);
+
+                            $TglKredit['deposit_history_nominal'] = $masuk['deposit_history_nominal'];
+
+                            $sql = "SELECT is_posting from gl.gl_buffer_transaksi a where id_pembayaran_det in 
+                            (select pembayaran_det_id from klinik.klinik_pembayaran_det where id_pembayaran = '".$dataTable[$i]['id_pembayaran']."')";
+                            $dataPost = $dtaccess->Fetch($sql);
+
+
+                            $sql = "SELECT sum(deposit_history_nominal) as total from klinik.klinik_deposit_history where id_pembayaran = ".QuoteValue(DPE_CHAR, $dataTable[$i]['id_pembayaran'])." and deposit_history_flag <> 'M'";
+
+                            $dataNom = $dtaccess->Fetch($sql);
+
+                            $totalNominal = ($dataPost['is_posting'] == 'y') ? abs($dataNom['total']) : 0;
+
+                            $DepositKredit = currency_format($TglKredit['deposit_history_nominal']);
+                            $Saldo = StripCurrency($DepositKredit) - StripCurrency($totalNominal);
+                        ?>
+                          <tr>
+                            <td align="center" width="10%"><?php echo $dataTable[$i]['cust_usr_kode'] ?></td>
+                            <td align="center" width="10%"><?php echo $dataTable[$i]['deposit_history_no_bukti'].' / '.$dataTable[$i]['jenis_nama'] ?></td>
+                            <td align="left" width="30%"><?php echo $dataTable[$i]['cust_usr_nama'] ?></td>
+                            <td align="center" width="10%"><?=($dataPost['is_posting'] == 'y') ? date_db($dataTable[$i]['deposit_history_tgl']) : "" ?></td>
+                            <td align="center" width="10%"><?php if($TglKredit['deposit_history_tgl'] != '') echo date_db($TglKredit['deposit_history_tgl']); else echo '-'; ?></td>
+                            <td align="right" width="10%"><?php if($TglKredit['deposit_history_tgl'] != '') echo $DepositKredit; else echo '-'; ?></td>
+                            <td align="right" width="10%"><?=currency_format($totalNominal)?></td>
+                            <td align="right" width="10%"><?php echo currency_format($Saldo) ?></td>
+                            
+                          </tr>
+                        <?php 
+                            $SubKredit += StripCurrency($DepositKredit);
+                            $SubDebet += StripCurrency($totalNominal);
+                            $SubSaldo += $Saldo;
+                          } 
+                        ?>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td align="center" colspan="5"><b>TOTAL</b></td>
+                          
+                          <td align="right"><b><?php echo currency_format($SubKredit) ?></b></td>
+                          <td align="right"><b><?php echo currency_format($SubDebet) ?></b></td>
+                          <td align="right"><b><?php echo currency_format($SubSaldo) ?></b></td>
+                        </tr>
+                      </tfoot>
+                    </table>
+
+                    <input type="hidden" name="x_mode" value="<?php echo $_x_mode ?>" />
+                  </form>
+                  <?php if (!$_POST['btnExcel']) { ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /page content -->
+
+            <!-- footer content -->
+            <?php require_once($LAY . "footer.php") ?>
+            <!-- /footer content -->
+          </div>
+        </div>
+
+        <?php require_once($LAY . "js.php") ?>
+      <?php } ?>
+  </body>
+
+  </html>

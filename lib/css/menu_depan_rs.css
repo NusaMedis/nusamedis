@@ -1,0 +1,86 @@
+@font-face{font-family: fontdefault;src: url('font.otf')}
+*{ margin: 0; padding: 0;} a {text-decoration:none; }
+img{border: none;}
+body {
+	font-family: fontdefault;
+	font-size: 11px;
+	color:#000;
+	background-color: #000;
+}
+#carousel{
+	width: 700px;
+	height: 150px;
+	position: absolute;
+	top: 200px;
+	left: 50%;
+	margin-left: -350px;
+}
+#carousel a
+{
+	position: absolute; text-align:center; color:#fff; font-size:18px;
+	width: 110px; text-decoration:none;
+}
+
+#ImageBoxOverlay
+{
+	background-color: #000;
+	z-index: 1000;
+}
+#ImageBoxOuterContainer{
+	z-index: 1000;
+}
+#ImageBoxCaption
+{
+	background-color: #F4F4EC;
+}
+#ImageBoxContainer
+{
+	width: 250px;
+	height: 250px;
+	background-color: #F4F4EC;
+}
+#ImageBoxCaptionText
+{
+	font-weight: bold;
+	padding-bottom: 5px;
+	font-size: 13px;
+	color: #000;
+}
+#ImageBoxCaptionImages
+{
+	margin: 0;
+}
+#ImageBoxNextImage
+{
+	background-image: url(images/imagebox/spacer.gif);
+	background-color: transparent;
+}
+#ImageBoxPrevImage
+{
+	background-image: url(images/imagebox/spacer.gif);
+	background-color: transparent;
+}
+#ImageBoxNextImage:hover
+{
+	background-image: url(images/imagebox/next_image.jpg);
+	background-repeat:	no-repeat;
+	background-position: right top;
+}
+#ImageBoxPrevImage:hover
+{
+	background-image: url(images/imagebox/prev_image.jpg);
+	background-repeat:	no-repeat;
+	background-position: left bottom;
+}
+/*----------Copyright----------*/
+#copyright{
+position:fixed;
+right:0; bottom:0;
+font-size:14px; line-height:15px;
+margin:10px; color:#fff;
+text-align:right;
+}
+.copy{
+margin:3px;
+float:left;
+}

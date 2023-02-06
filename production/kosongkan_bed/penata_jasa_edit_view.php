@@ -1,0 +1,349 @@
+<?php
+require_once("../penghubung.inc.php");
+require_once($LIB . "login.php");
+require_once($LIB . "datamodel.php");
+require_once($LIB . "dateLib.php");
+require_once($LIB . "tampilan.php");
+
+
+$view = new CView($_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING']);
+$dtaccess = new DataAccess();
+$auth = new CAuth();
+$depId = $auth->GetDepId();
+$userId = $auth->GetUserId();
+$userName = $auth->GetUserName();
+$usePoli = $auth->GetPoli();
+$depNama = $auth->GetDepNama();
+
+
+if (!$auth->IsAllowed("man_ganti_password", PRIV_CREATE)) {
+  die("Maaf anda tidak berhak membuka halaman ini....");
+  exit(1);
+} else 
+      if ($auth->IsAllowed("man_ganti_password", PRIV_CREATE) === 1) {
+  echo "<script>window.parent.document.location.href='" . $ROOT . "login/login.php?msg=Login First'</script>";
+  exit(1);
+}
+
+$_x_mode = "New";
+$thisPage = "penata_jasa_view.php";
+$editPage = "penata_jasa_proses.php";
+$transferPage = "penata_jasa_transfer.php";
+
+//kembali pada Menu View Penata Jasa
+if ($_POST["btnView"]) {
+  header("location:penata_jasa_view.php");
+  exit();
+}
+
+
+
+
+
+// KONFIGURASI
+$sql = "select * from global.global_departemen where dep_id =" . QuoteValue(DPE_CHAR, $depId);
+$rs = $dtaccess->Execute($sql);
+$konfigurasi = $dtaccess->Fetch($rs);
+$_POST["dep_bayar_reg"] = $konfigurasi["dep_bayar_reg"];
+$_POST["dep_kasir_tindakan"] = $konfigurasi["dep_kasir_tindakan"];
+
+
+$table = new InoTable("table", "100%", "left");
+$skr = date("d-m-Y");
+$time = date("H:i:s");
+
+if (!$_POST['tgl_awal']) {
+  $_POST['tgl_awal']  = $skr;
+}
+if (!$_POST['tgl_akhir']) {
+  $_POST['tgl_akhir']  = $skr;
+}
+
+if (!$_POST["tanggal_awal"]) $_POST["tanggal_awal"] = $skr;
+if (!$_POST["tanggal_akhir"]) $_POST["tanggal_akhir"] = $skr;
+if ($_GET["tanggal_awal"]) $_POST["tanggal_awal"] =  $_GET["tanggal_awal"];
+if ($_GET["tanggal_akhir"]) $_POST["tanggal_akhir"] =  $_GET["tanggal_akhir"];
+
+
+if ($_POST["cust_usr_kode"])  $sql_where[] = "e.cust_usr_kode like" . QuoteValue(DPE_CHAR, $_POST["cust_usr_kode"]);
+if ($_POST["cust_usr_nama"])  $sql_where[] = "e.cust_usr_nama like" . QuoteValue(DPE_CHAR, "%" . $_POST["cust_usr_nama"] . "%");
+
+
+if ($_POST["id_kamar"] <> '--')  $sql_where[] = "a.id_kamar like" . QuoteValue(DPE_CHAR, $_POST["id_kamar"]);
+if ($_POST["id_kelas"] <> '--')  $sql_where[] = "b.id_kelas like" . QuoteValue(DPE_CHAR, $_POST["id_kelas"]);
+
+if ($sql_where[0])
+  $sql_where = implode(" and ", $sql_where);
+
+$sql = "select a.*,a.bed_kode, b.kamar_nama, b.kamar_kode, c.jenis_kelas_nama,d.kelas_nama
+				          from klinik.klinik_kamar_bed a 
+                  join klinik.klinik_kamar b on b.kamar_id = a.id_kamar                
+                  join klinik.klinik_jenis_kelas c on c.jenis_kelas_id = b.id_jenis_kelas                
+                  join klinik.klinik_kelas d on d.kelas_id = b.id_kelas                
+                  where b.id_dep =" . QuoteValue(DPE_CHAR, $depId) . "
+	                and a.bed_reserved ='y'";
+if ($sql_where) $sql .= " and " . $sql_where;
+$sql .= " order by b.kamar_nama,a.bed_urut";
+// echo $sql;
+$dataTable = $dtaccess->FetchAll($sql);
+
+$row = -1;
+for ($i = 0, $n = count($dataTable); $i < $n; $i++) {
+
+  $row++;
+  $kamar[$dataTable[$i]["reg_id"]] = $dataTable[$i]["kamar_nama"];
+  $bed[$dataTable[$i]["reg_id"]] = $dataTable[$i]["bed_kode"];
+}
+
+
+
+
+$tbHeader[0][$counterHeader][TABLE_ISI] = "No";
+$tbHeader[0][$counterHeader][TABLE_WIDTH] = "1%";
+$counterHeader++;
+
+
+
+$tbHeader[0][$counterHeader][TABLE_ISI] = "Kamar";
+$tbHeader[0][$counterHeader][TABLE_WIDTH] = "30%";
+$counterHeader++;
+$tbHeader[0][$counterHeader][TABLE_ISI] = "Kelas";
+$tbHeader[0][$counterHeader][TABLE_WIDTH] = "25%";
+$counterHeader++;
+$tbHeader[0][$counterHeader][TABLE_ISI] = "Jenis Kelas";
+$tbHeader[0][$counterHeader][TABLE_WIDTH] = "25%";
+$counterHeader++;
+
+$tbHeader[0][$counterHeader][TABLE_ISI] = "Bed";
+$tbHeader[0][$counterHeader][TABLE_WIDTH] = "14%";
+$counterHeader++;
+
+
+$tbHeader[0][$counterHeader][TABLE_ISI] = "Kosongkan bed";
+$tbHeader[0][$counterHeader][TABLE_WIDTH] = "5%";
+$counterHeader++;
+
+
+
+
+
+$jumHeader = $counterHeader;
+for ($i = 0, $n = count($dataTable), $counter = 0; $i < $n; $i++, $counter = 0) {
+
+  $update = "penata_jasa_edit_view.php?updateBed=1&id_reg=" . $reg[$data[$i]] . "&bed_id=" . $dataTable[$i]["bed_id"];
+
+
+
+
+  $tbContent[$i][$counter][TABLE_ISI] = ($i + 1);
+  $tbContent[$i][$counter][TABLE_ALIGN] = "center";
+  $tbContent[$i][$counter][TABLE_CLASS] = "tablecontent";
+  $counter++;
+
+  $tbContent[$i][$counter][TABLE_ISI] = $dataTable[$i]["kamar_nama"];
+  $tbContent[$i][$counter][TABLE_ALIGN] = "center";
+  $tbContent[$i][$counter][TABLE_CLASS] = "tablecontent";
+  $counter++;
+
+  $tbContent[$i][$counter][TABLE_ISI] = $dataTable[$i]["jenis_kelas_nama"];
+  $tbContent[$i][$counter][TABLE_ALIGN] = "center";
+  $tbContent[$i][$counter][TABLE_CLASS] = "tablecontent";
+  $counter++;
+
+  $tbContent[$i][$counter][TABLE_ISI] = $dataTable[$i]["kelas_nama"];
+  $tbContent[$i][$counter][TABLE_ALIGN] = "center";
+  $tbContent[$i][$counter][TABLE_CLASS] = "tablecontent";
+  $counter++;
+
+  $tbContent[$i][$counter][TABLE_ISI] = $dataTable[$i]["bed_kode"];
+  $tbContent[$i][$counter][TABLE_ALIGN] = "center";
+  $tbContent[$i][$counter][TABLE_CLASS] = "tablecontent";
+  $counter++;
+
+  $tbContent[$i][$counter][TABLE_ISI] = '<a href="' . $update . '"><img hspace="2" width="30" height="30" src="' . $ROOT . 'gambar/icon/hapus.png" alt="Proses" title="Proses" border="0" onclick="javascript: return hapusReg();"/></a>';
+  $tbContent[$i][$counter][TABLE_ALIGN] = "center";
+  $tbContent[$i][$counter][TABLE_CLASS] = "tablecontent";
+  $counter++;
+}
+$tableHeader = "Kosongkan Bed";
+
+if ($_GET["updateBed"]) {
+  $bed = $_GET["bed_id"];
+  $sql = "update klinik.klinik_kamar_bed set bed_reserved='n'
+                         where bed_id = " . QuoteValue(DPE_CHAR, $bed); //[$i]);
+  $dtaccess->Execute($sql, DB_SCHEMA);
+
+  $kembali = "penata_jasa_edit_view.php";
+  header("location:" . $kembali);
+  exit();
+}
+
+
+$sql = "select * from klinik.klinik_kamar";
+$rs = $dtaccess->Execute($sql);
+$dataKamar = $dtaccess->FetchAll($rs);
+
+$sql = "select * from klinik.klinik_kelas";
+$rs = $dtaccess->Execute($sql);
+$dataKelas = $dtaccess->FetchAll($rs);
+//echo $sql;
+
+
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<?php require_once($LAY . "header.php") ?>
+
+<body class="nav-md">
+  <div class="container body">
+    <div class="main_container">
+      <?php require_once($LAY . "sidebar.php") ?>
+
+      <!-- top navigation -->
+      <?php require_once($LAY . "topnav.php") ?>
+      <!-- /top navigation -->
+
+      <!-- page content -->
+      <div class="right_col" role="main">
+        <div class="">
+          <div class="clearfix"></div>
+          <!-- row filter -->
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2><?php echo $tableHeader; ?></h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <form name="frmView" action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST">
+
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                      <label class="control-label col-md-12 col-sm-12 col-xs-12">Ruang</label>
+                      <div id="div_header">
+                        <select class="form-control" name="id_kamar">
+                          <option value="--">[ Semua Kamar ]</option>
+                          <?php for ($i = 0, $n = count($dataKamar); $i < $n; $i++) { ?>
+                            <option value="<?php echo $dataKamar[$i]["kamar_id"]; ?>" <?php if ($_POST["id_kamar"] == $dataKamar[$i]["kamar_id"]) echo "selected"; ?>><?php echo $dataKamar[$i]["kamar_nama"]; ?></option>
+                          <?php } ?>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                      <label class="control-label col-md-12 col-sm-12 col-xs-12">Kelas</label>
+                      <div id="div_header">
+                        <select class="form-control" name="id_kelas">
+                          <option value="--">[ Semua Kelas ]</option>
+                          <?php for ($i = 0, $n = count($dataKelas); $i < $n; $i++) { ?>
+                            <option value="<?php echo $dataKelas[$i]["kelas_id"]; ?>" <?php if ($_POST["id_kelas"] == $dataKelas[$i]["kelas_id"]) echo "selected"; ?>><?php echo $dataKelas[$i]["kelas_nama"]; ?></option>
+                          <?php } ?>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                      <label class="control-label col-md-12 col-sm-12 col-xs-12">&nbsp;</label>
+                      <div id="div_header">
+                        <input type="submit" name="btnLanjut" value="Lanjut" class="pull-right btn btn-primary">
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- //row filter -->
+
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+              <div class="x_title">
+                <div class="clearfix"></div>
+              </div>
+              <div class="x_content">
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <? for ($k = 0, $l = $jumHeader; $k < $l; $k++) {  ?>
+                        <th class="column-title"><?php echo $tbHeader[0][$k][TABLE_ISI]; ?> </th>
+                      <? } ?>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <? for ($i = 0, $n = count($dataTable); $i < $n; $i++) {   ?>
+
+                      <tr class="even pointer">
+                        <? for ($k = 0, $l = $jumHeader; $k < $l; $k++) {  ?>
+                          <td class=" "><?php echo $tbContent[$i][$k][TABLE_ISI] ?></td>
+                        <? } ?>
+
+                      </tr>
+
+                    <? } ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="x_mode" value="<?php echo $_x_mode ?>" />
+          <?php if ($konfigurasi["dep_konf_dento"] == 'y') {; ?>
+            <!--------Buat Helpicon----------->
+            <script type="text/javascript">
+              function showHideGB() {
+                var gb = document.getElementById("gb");
+                var w = gb.offsetWidth;
+                gb.opened ? moveGB(0, 30 - w) : moveGB(20 - w, 10);
+                gb.opened = !gb.opened;
+              }
+
+              function moveGB(x0, xf) {
+                var gb = document.getElementById("gb");
+                var dx = Math.abs(x0 - xf) > 10 ? 5 : 1;
+                //var dir = xf>x0 ? 1 : -1;
+                var dir = 10;
+                var x = x0 + dx * dir;
+                gb.style.right = x.toString() + "px";
+                if (x0 != xf) {
+                  setTimeout("moveGB(" + x + ", " + xf + ")", 10);
+                }
+              }
+            </script>
+            <div id="gb">
+              <div class="gbcontent">
+                <div style="text-align:center;">
+                  <a href="javascript:showHideGB()" style="text-decoration:none; color:#000; font-weight:bold; line-height:0;"><img src="<?php echo $ROOT; ?>gambar/tutupclose.png" /></a>
+                </div>
+                <center>
+                  <a rel="sepur" href="<?php echo $ROOT; ?>demo/pembayaran_kasir.php"><img src="<?php echo $ROOT; ?>gambar/helpicon.gif" /></a>
+                </center>
+                <script type="text/javascript">
+                  var gb = document.getElementById("gb");
+                  gb.style.center = (30 - gb.offsetWidth).toString() + "px";
+                </script>
+                </center>
+              </div>
+            </div>
+          <?php } ?>
+          <?php //echo $view->RenderBottom("module.css",$userName,false,$depNama); 
+          ?>
+          <?php //echo $view->RenderBodyEnd(); 
+          ?>
+        </div>
+      </div>
+      <!-- /page content -->
+
+      <!-- footer content -->
+      <?php require_once($LAY . "footer.php") ?>
+      <!-- /footer content -->
+    </div>
+  </div>
+
+  <?php require_once($LAY . "js.php") ?>
+
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+@font-face{ font-family: fontdefault; src: url('../font/sansation.ttf')}
+*{ font-family: fontdefault;}
+body{ margin:0; padding:0; background-color:#f0f0f0; }
+p{ font-size:10px;}
+a{ text-decoration:none; color:#000;}
+h1,h2,h3,h4,h5,h6,h7 {clear:both; text-shadow:1px 1px #adc200}
+/*----------Head----------*/
+#head {
+width:975px;
+margin-left:30px;
+}
+/*----------Body----------*/
+#body {
+margin:0; padding-left:20px; padding-top:20px;
+width:800px;
+}
+/*----------Foot----------*/
+#foot {
+width:800px; height:100px;
+margin-left:30px;
+clear:both;
+}
+/*----------Menu----------*/
+#menu {
+margin-left:10px; padding:5px;
+float:left;
+height:80px; width:215px;
+}
+#menu:hover{
+background-color: #009100;
+-moz-box-shadow:0px 0px 15px 2px #006600;
+-moz-border-radius: 10px 10px 10px 10px ;
+color:#FFFFFF;
+}
+#menupre {
+margin-left:10px; padding:5px;
+float:left;
+height:80px; width:215px;
+}
+#menupre:hover{
+background-color: #ffe400;
+background-image:url(../images/prem.png); background-repeat:no-repeat; background-position:right;
+text-shadow: #000 1px 1px;
+-moz-box-shadow:0px 0px 15px 2px #fafafa;
+-moz-border-radius: 10px 10px 10px 10px ;
+color:#FFFFFF;
+}
+.icon{
+float:left;
+}
+.title{
+float:left;
+margin:0; padding:0;
+font-size:13px; font-weight:bold;
+}
+/*----------Copyright----------*/
+#copyright{
+position:fixed;
+right:0; bottom:0;
+font-size:13px; line-height:13px;
+margin:10px;
+text-align:right;
+}
+
+#setikertop{
+position:fixed;
+width: 450px;
+height: 50px;
+right:0; top:0;
+}
+
+.copy{
+margin:3px;
+float:left;
+}
+/*----------Copyright----------*/
+input{
+border:0px;  
+height:25px;
+-moz-border-radius:3px;   
+}
+input:hover{
+border:0px;
+background-color:#fafafa;
+cursor:pointer;
+-moz-box-shadow:0px 0px 10px 2px #e0e0e0;
+}
+ /*----------------------------------------------------------step---------------------------*/
+ul.steps{ list-style-type: none;min-width:900px;width:100% }
+
+ul.steps li{
+
+    position:relative;
+    float: left;
+color: #C2C2C2;
+   background: url('../css/gambar/steps.png') left -15px no-repeat;
+    min-height:30px;
+    height: 30px;
+    min-width:130px;
+    width:130px;
+line-height: 2em;
+font-weight: bold;
+font-size: 10px;
+    margin-bottom:1em;
+    text-align:center;
+    overflow:hidden;
+}
+
+ul.steps a{
+text-decoration:none;
+color:#fff;
+}
+
+ul.steps li span{ color: #FFF; margin: 0 5px 0 10px; }
+
+ul.steps li.empty{
+    background-position: left -15px;
+}
+ul.steps li.start {
+color: #fff;
+    background-position: left -515px;
+}
+ul.steps li.next{
+    background-position: left -115px;
+}
+ul.steps li.current{
+  color:#fff;
+    background-position: left -215px;
+}
+
+ul.steps li.prevDone{
+color: #fff;
+    background-position: left -415px;
+}
+
+ul.steps li.lastDone, ul.steps li.Done {
+color: #fff;
+    background-position: left -315px;
+}
+
+
+.clear {
+  clear:both
+}

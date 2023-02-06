@@ -1,0 +1,321 @@
+<?php
+     require_once("../penghubung.inc.php");
+     require_once($LIB."login.php");
+     require_once($LIB."encrypt.php");
+     require_once($LIB."datamodel.php");
+     require_once($LIB."currency.php");
+     require_once($LIB."dateLib.php");
+     require_once($LIB."tampilan.php");
+        
+     $view = new CView($_SERVER['PHP_SELF'],$_SERVER['QUERY_STRING']);
+     $dtaccess = new DataAccess();
+     $enc = new TextEncrypt();     
+     $auth = new CAuth();
+     $table = new InoTable("table","100%","left");
+     $depNama = $auth->GetDepNama();
+	   $depId = $auth->GetDepId();
+     $userName = $auth->GetUserName();
+     $depLowest = $auth->GetDepLowest();
+     
+     $editPage = "satuan_edit.php";
+     $thisPage = "satuan_view.php";
+     
+	 // PRIVILLAGE
+	if(!$auth->IsAllowed("man_ganti_password",PRIV_CREATE)){
+          die("Maaf anda tidak berhak membuka halaman ini....");
+          exit(1);
+     } else 
+      if($auth->IsAllowed("man_ganti_password",PRIV_CREATE)===1){
+          echo"<script>window.parent.document.location.href='".$ROOT."login/login.php?msg=Login First'</script>";
+          exit(1);
+     } 
+	 
+    /* if(!$auth->IsAllowed("apo_setup_sat_barang",PRIV_READ)){
+          echo"<script>window.document.location.href='".$ROOT."expire.php'</script>";
+          exit(1);
+          
+     } elseif($auth->IsAllowed("apo_setup_sat_barang",PRIV_READ)===1){
+          echo"<script>window.parent.document.location.href='".$ROOT."login.php?msg=Session Expired'</script>";
+          exit(1);
+     }  */
+     
+    // if(!$_POST["klinik"]) $_POST["klinik"] = $depId; 
+     //if (!$_GET["klinik"]) { $_POST["klinik"] = $depId; }     
+     //else if(!$_POST["klinik"]) { $_POST["klinik"] = $_GET["klinik"]; }
+ 
+ if($_GET["klinik"]) { $_POST["klinik"] = $_GET["klinik"]; 
+      }else if($_POST["klinik"]) { $_POST["klinik"] = $_POST["klinik"]; }
+      else { $_POST["klinik"] = $depId; }
+ 
+     if ($_GET["kembali"]) $_POST["klinik"]=$_GET["kembali"]; 
+     $addPage = "satuan_edit.php?tambah=".$_POST["klinik"];
+     // -- paging config ---//
+     $recordPerPage = 25;
+     if($_GET["currentPage"]) $currPage = $_GET["currentPage"];
+     else $currPage = 1;
+     $startPage = ($currPage-1)*$recordPerPage;
+     $endPage = $startPage + $recordPerPage;
+     // -- end paging config ---//
+
+     //$sql_where[] = "1=1";
+     
+     if($_GET["klinik"]){
+       $_SESSION["x_id_jenis_x"] = $_POST["klinik"];
+     }else{
+       $_GET["klinik"] = $_SESSION["x_id_jenis_x"];
+     }
+
+     if($_POST["klinik"] && $_POST["klinik"]!="--") $sql_where[] = "id_dep = ".QuoteValue(DPE_CHAR,$_POST["klinik"]); 
+     if($_POST["_nama"]) $sql_where[] = "UPPER(satuan_nama) like ".QuoteValue(DPE_CHAR,strtoupper("%".$_POST["_nama"]."%"));
+     if($_POST["satuan_tipe"] && $_POST["satuan_tipe"]!="--") $sql_where[] = " satuan_tipe = ".QuoteValue(DPE_CHAR,$_POST["satuan_tipe"]);
+     if($sql_where) $sql_where = implode(" and ",$sql_where);
+   
+     $sql = "select a.*, b.dep_nama from logistik.logistik_item_satuan a left join global.global_departemen b on b.dep_id = a.id_dep";
+     if($sql_where) $sql .= " where ".$sql_where;
+     $sql .= " order by satuan_nama asc ";
+     $rs = $dtaccess->Execute($sql);//$dtaccess->Query($sql,$recordPerPage,$startPage);
+     $dataTable = $dtaccess->FetchAll($rs);
+      //echo $sql;
+      
+     // --- ngitung jml data e ---              
+     $sql = "select count(satuan_id) as total from  logistik.logistik_item_satuan";
+     if($sql_where) $sql .= " where ".$sql_where;
+     //echo $sql;
+     $rsNum = $dtaccess->Execute($sql);
+     $numRows = $dtaccess->Fetch($rsNum);
+     
+     //*-- config table ---*//           
+     $tableHeader = "&nbsp;Satuan Obat";
+     
+   /*  $isAllowedDel = $auth->IsAllowed("apo_setup_sat_barang",PRIV_DELETE);
+     $isAllowedUpdate = $auth->IsAllowed("apo_setup_sat_barang",PRIV_UPDATE);
+     $isAllowedCreate = $auth->IsAllowed("apo_setup_sat_barang",PRIV_CREATE); */
+     
+     // --- construct new table ---- //
+     $counterHeader = 0;
+     
+     $tbHeader[0][$counterHeader][TABLE_ISI] = "No.";
+     $tbHeader[0][$counterHeader][TABLE_WIDTH] = "3%";
+     $counterHeader++;
+                
+     $tbHeader[0][$counterHeader][TABLE_ISI] = "Nama";
+     $tbHeader[0][$counterHeader][TABLE_WIDTH] = "81%";
+     $counterHeader++;  
+     
+     $tbHeader[0][$counterHeader][TABLE_ISI] = "Jumlah";
+     $tbHeader[0][$counterHeader][TABLE_WIDTH] = "10%";
+     $counterHeader++;   
+     
+     $tbHeader[0][$counterHeader][TABLE_ISI] = "Tipe";
+     $tbHeader[0][$counterHeader][TABLE_WIDTH] = "15%";
+     $counterHeader++; 
+     
+     
+     //if($isAllowedUpdate){
+          $tbHeader[0][$counterHeader][TABLE_ISI] = "Edit";
+          $tbHeader[0][$counterHeader][TABLE_WIDTH] = "3%";
+          $counterHeader++;
+     //} 
+      
+     //if($isAllowedDel){
+          $tbHeader[0][$counterHeader][TABLE_ISI] = "Hapus";
+          $tbHeader[0][$counterHeader][TABLE_WIDTH] = "3%";
+          $counterHeader++;
+    // }
+       //TOTAL HEADER TABLE
+      $jumHeader= $counterHeader;   
+     for($i=0,$counter=0,$n=count($dataTable);$i<$n;$i++,$counter=0){
+     
+       $tbContent[$i][$counter][TABLE_ISI] = ($startPage+$i+1);               
+       $tbContent[$i][$counter][TABLE_ALIGN] = "center";
+       $counter++;
+                
+          $tbContent[$i][$counter][TABLE_ISI] = $dataTable[$i]["satuan_nama"];
+          $tbContent[$i][$counter][TABLE_ALIGN] = "left";
+          $counter++;  
+          
+          $tbContent[$i][$counter][TABLE_ISI] = currency_format($dataTable[$i]["satuan_jumlah"]);
+          $tbContent[$i][$counter][TABLE_ALIGN] = "left";
+          $counter++; 
+          
+          if($dataTable[$i]["satuan_tipe"]=="B") {
+          $tbContent[$i][$counter][TABLE_ISI] = "Beli";
+          $tbContent[$i][$counter][TABLE_ALIGN] = "left";
+          $counter++;
+          } else {
+          $tbContent[$i][$counter][TABLE_ISI] = "Jual";
+          $tbContent[$i][$counter][TABLE_ALIGN] = "left";
+          $counter++;
+          }
+        
+           
+          //if($isAllowedUpdate) {
+               $tbContent[$i][$counter][TABLE_ISI] = '<a href="'.$editPage.'?id='.$enc->Encode($dataTable[$i]["satuan_id"]).'&klinik='.$dataTable[$i]["id_dep"].'"><img hspace="2" width="32" height="32" src="'.$ROOT.'gambar/icon/edit.png" alt="Edit" title="Edit" border="0"></a>';               
+               $tbContent[$i][$counter][TABLE_ALIGN] = "center";
+               $counter++;
+          //}
+         // if($isAllowedDel) {
+               $tbContent[$i][$counter][TABLE_ISI] = '<a href="'.$editPage.'?del=1&id='.$enc->Encode($dataTable[$i]["satuan_id"]).'"><img hspace="2" width="32" height="32" src="'.$ROOT.'gambar/icon/hapus.png" alt="Hapus" title="Hapus" border="0"></a>';               
+               $tbContent[$i][$counter][TABLE_ALIGN] = "center";
+               $counter++;
+          //}
+          
+     }
+     $tombolAdd = '<input type="button" name="btnAdd" value="Tambah" class="btn btn-primary" onClick="document.location.href=\''.$editPage.'\'"></button>';
+     
+     $colspan = count($tbHeader[0]);
+
+    if($_POST["klinik"]){
+       //Data Klinik
+       if($depLowest=='n'){
+            $sql = "select * from global.global_departemen order by dep_id";
+            $rs = $dtaccess->Execute($sql);
+            $dataKlinik = $dtaccess->FetchAll($rs);
+       }else{
+            $sql = "select * from global.global_departemen where dep_id = '".$_POST["klinik"]."' order by dep_id";
+            $rs = $dtaccess->Execute($sql);
+            $dataKlinik = $dtaccess->FetchAll($rs);
+        }
+     }else{
+          $sql = "select * from global.global_departemen order by dep_id";
+          $rs = $dtaccess->Execute($sql);
+          $dataKlinik = $dtaccess->FetchAll($rs);
+     }
+     
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <?php require_once($LAY."header.php") ?>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <?php require_once($LAY."sidebar.php") ?>
+		<script>
+		  function rejenis(kliniks) {
+		   document.location.href='satuan_view.php?klinik='+kliniks+'&currentPage=<?php echo $_GET["currentPage"];?>&recPerPage=<?php echo $_GET["recPerPage"];?>';
+		  }
+		</script>
+        <!-- top navigation -->
+          <?php require_once($LAY."topnav.php") ?>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>Apotik</h3>
+              </div>
+            </div>
+			<div class="clearfix"></div>
+			<!-- row filter -->
+			<div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Satuan Obat</h2>
+                    <div class="clearfix"></div>
+                  <span class="pull-right"><?php echo $tombolAdd; ?></span>
+				  </div>
+                  <div class="x_content">
+				  <form action="<?php echo $_SERVER["PHP_SELF"]?>" method="POST" >
+					<div class="col-md-4 col-sm-6 col-xs-12">
+                        <label class="control-label col-md-12 col-sm-12 col-xs-12">Nama Satuan</label>
+						<?php echo $view->RenderTextBox("_nama","_nama",50,200,$_POST["_nama"],false,false);?>
+					</div>
+					<div class="col-md-4 col-sm-6 col-xs-12">
+                        <label class="control-label col-md-12 col-sm-12 col-xs-12">Tipe</label>
+						 <select class="form-control" name="satuan_tipe" id="satuan_tipe">
+							<option value="--">- Semua Tipe -</option>
+							 <option value="B"  <?php if($_POST["satuan_tipe"]=="B") echo "selected";?>>Beli</option>    
+							 <option value="J" <?php if($_POST["satuan_tipe"]=="J") echo "selected";?>>Jual</option>
+							</select>
+						</div>
+						
+					 
+					
+					<div class="col-md-4 col-sm-6 col-xs-12">
+                        <label class="control-label col-md-12 col-sm-12 col-xs-12">&nbsp;</label>
+						<input type="submit" name="btnSearch" id="btnSearch" value="cari" class="pull-right col-md-12 col-sm-12 col-xs-12 btn btn-primary">&nbsp;
+				    </div>
+					
+					<div class="clearfix"></div>
+					</form>
+                  </div>
+                </div>
+              </div>
+            </div>
+			<!-- //row filter -->
+
+            <div class="row">
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+					   <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                      <thead>
+                        <tr>
+                          <? for($k=0,$l=$jumHeader;$k<$l;$k++) {  ?>                               
+                               <th class="column-title"><?php echo $tbHeader[0][$k][TABLE_ISI];?> </th>
+                            <? } ?>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          <? for($i=0,$n=count($dataTable);$i<$n;$i++) {   ?>
+                          
+                          <tr class="even pointer">
+                            <? for($k=0,$l=$jumHeader;$k<$l;$k++) {  ?> 
+                            <td class=" "><?php echo $tbContent[$i][$k][TABLE_ISI]?></td>
+                            <? } ?>
+                            
+                          </tr>                           
+                         <? } ?>
+                      </tbody>
+                    </table>					
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+          <?php require_once($LAY."footer.php") ?>
+        <!-- /footer content -->
+      </div>
+    </div>
+<?php echo $view->SetFocus("btnAdd"); ?>
+<?php require_once($LAY."js.php") ?>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

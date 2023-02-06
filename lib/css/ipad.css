@@ -1,0 +1,784 @@
+@font-face{font-family: fontdefault;src: url('../font/calibri.ttf')}*{font-family:fontdefault;}
+body,ul,li {padding:0;margin:0;border:0;}
+body {font-size:10px;}
+#header {width:100%;height:0px;}
+
+#footer {z-index:1;width:100%;height:5px;padding:0;}
+#footer li {display:block;float:left;}
+#footer li {width:50%;text-align:center;}
+#footer a.remove {border-right:1px solid #333;}
+#footer a.add {border-left:1px solid #6a6a6a;}
+#footer a {display:block;text-decoration:none;font-size:12px;line-height:24px;text-shadow:0 -1px 0 #000;}
+#footer span {display:block;font-size:30px;font-weight:bold;}
+
+#wrapperes {padding:2px;position:absolute; z-index:-1;top:5px; bottom:0px; left:0;width:100%;height:100%;overflow:auto;float:right;}
+
+#scroller2 {-webkit-tap-highlight-color:rgba(0,0,0,0);float:left;width:100%;padding:0;}
+#scroller2 ul {list-style:none;padding:0;margin:0;width:100%;text-align:left;}
+#scroller2 li {padding:5px;height:50px;line-height:10px;border-bottom:1px solid #ccc;border-top:1px solid #fff;
+background-color:#fafafa;text-decoration:none;font-size:14px;font-weight:bold; color:#999999;
+}
+#scroller2 li a {color:#000;line-height:18px;display:block;text-decoration:none;}
+#scroller2 li a:hover {color:#fff;}
+
+/* --------- X-Rays Gigi --------- */
+#sliderWrapFotoxGigi {margin: 0 auto;width: 750px;}
+#sliderWrapFotoxGigi fieldset{width: 300px; margin-left:20px;}
+#sliderFotoxGigi {position: absolute;background-image:url(image/sliders.png);background-repeat:no-repeat;
+background-position: bottom;background-color:transparent;width: 780px;height: 370px;margin-top: -370px;
+}
+#sliderFotoxGigi img {border: 0;}
+#sliderContentFotoxGigi {margin: 1px 0px 0px 45px;position: absolute;text-align:center;font-weight:bold;padding: 0px;}
+#openCloseWrapFotoxGigi {position:absolute;margin: 370px 0 0 600px;font-size:12px;font-weight:bold;}
+#sliderContentBawahFotoxGigi {margin-top: 20px;width:100%;position: center;}
+#kiriFotoxGigi {margin-top: 3px;float:left;width: 800px;height: 178px;margin-left:3px;}
+#kananFotoxGigi {margin-top: 5px;float:left;width: 250px;height: 178px;}
+#sliderLagiFotoxGigi {margin-top: 100px;width:100%;position: center;}
+#kiriLagiFotoxGigi {margin-top: -27px; float:left;width: 760px;height: 178px;margin-left:8px;}
+#kananLagiFotoxGigi {margin-top: 25px;float:left;width: 250px;height: 178px;}
+/* -------------------------------------------tindakan -- */
+#sliderWrap {margin: 0 auto;width: 300px;}                  
+#slider {position: absolute;background-image:url(image/sliders.png);background-repeat:no-repeat;
+background-position: bottom; width: 730px;height: 350px;margin-top: -350px;
+}
+#slider img {border: 0;}
+#sliderContent {margin: 25px 0px 0px 30px;position: absolute;text-align:center;font-weight:bold;padding: 0px;}
+#openCloseWrap {position:absolute;margin: 350px 0 0 200px;  /*175*/font-size:12px;font-weight:bold;}     
+/*-------------------------------------------odontogram -- */
+#sliderWrapGigi {margin: 0 auto;width: 750px;}
+#sliderWrapGigi fieldset{width: 300px; margin-left:20px;}
+#sliderGigi {position: absolute;background-image:url(image/sliders.png);background-repeat:no-repeat;
+background-position: bottom;background-color:transparent;width: 730px;height: 350px;margin-top: -350px;}
+#sliderGigi img {border: 0;}
+#sliderContentGigi {margin: 25px 0px 0px 20px;position: absolute;text-align:center;font-weight:bold;padding: 0px;}
+#openCloseWrapGigi {position:absolute;margin: 350px 0 0 265px;font-size:12px;font-weight:bold;}
+#sliderContentBawahGigi {margin-top: 285px;width:100%;position: center;}
+#kiriGigi {margin-top: 5px;float:left;width: 420px;height: 178px;margin-left:25px;}
+#kananGigi {margin-top: 5px;float:left;width: 250px;height: 178px;}
+#sliderLagiGigi {margin-top: 400px;width:100%;position: center;}
+#kiriLagiGigi {margin-top: 5px;float:left;width: 420px;height: 178px;margin-left:25px;}
+#kananLagiGigi {margin-top: 25px;float:left;width: 250px;height: 178px;}
+/*----------------------hiistory gigi ------- */
+#sliderWrapFotoGigi {margin: 0 auto;width: 750px;}
+#sliderWrapFotoGigi fieldset{width: 300px; margin-left:20px;}
+#sliderFotoGigi {position: absolute;background-image:url(image/sliders.png);background-repeat:no-repeat;
+background-position: bottom;background-color:transparent;width: 780px;height: 370px;margin-top: -370px;
+}
+#sliderFotoGigi img {border: 0;}
+#sliderContentFotoGigi {margin: 1px 0px 0px 45px;position: absolute;text-align:center;font-weight:bold;padding: 0px;}
+#openCloseWrapFotoGigi {position:absolute;margin: 370px 0 0 169px;font-size:12px;font-weight:bold;}
+#sliderContentBawahFotoGigi {margin-top: 20px;width:100%;position: center;}
+#kiriFotoGigi {margin-top: 3px;float:left;width: 370px;height: 170px;margin-left:3px;}
+#kananFotoGigi {margin-top: 3px;float:right;width: 390px;height: 170px;}
+#sliderLagiFotoGigi {margin-top: 100px;width:100%;position: center;}
+#kiriLagiFotoGigi {margin-top: -20px; float:left;width: 760px;height: 178px;margin-left:8px;}
+#kananLagiFotoGigi {margin-top: 25px;float:left;width: 250px;height: 178px;}
+/* --------- ket tambahan --------- */
+#sliderWrapKet {margin: 0 auto;width: 750px;}
+#sliderWrapKet fieldset{width: 730px; margin-left:20px;}
+#sliderKet {position: absolute;background-image:url(image/sliders.png);background-repeat:no-repeat;background-position: bottom;
+background-color:transparent;width: 730px;height: 370px;margin-top: -370px;
+}
+#sliderKet img {border: 0;}
+#sliderContentKet {margin: 25px 0px 0px 20px;position: absolute;text-align:center;font-weight:bold;padding: 0px;}
+#openCloseWrapKet {position:absolute;margin: 370px 0 0 0px;font-size:12px;font-weight:bold;}
+select, option {font-size:	10px;text-indent:2px;margin: 2px;left: 0px;clip: rect(auto auto auto auto);border:0px;}
+/*------------------------------------------- NEW odontogram -- */
+#sliderWrapOdon {
+margin: 0 auto;
+width: 750px;
+}
+#sliderWrapOdon fieldset{
+width: 300px; margin-left:100px;
+}
+#sliderOdon {
+position: absolute;
+background-image:url(image/sliders.png);
+background-repeat:no-repeat;
+background-position: bottom;
+background-color:transparent;
+width: 730px;
+height: 350px;
+margin-top: -350px;    margin-left:100px;
+}
+#sliderOdon img {
+border: 0;
+}
+#sliderContentOdon {
+margin: 25px 0px 0px 10px;
+position: absolute;
+text-align:center;
+font-weight:bold;
+padding: 0px;
+}
+
+#openCloseWrapOdon {
+position:absolute;
+margin: 350px 0 0 475px;
+font-size:12px;
+font-weight:bold;
+}
+
+#sliderContentBawahOdon {
+margin-top: 285px;
+width:100%;
+position: absolute;
+}
+
+#kiriOdon {
+margin-top: 5px;
+float:left;
+width: 750px;
+height: 900px;
+margin-left:900px;
+/*background-color: #615;*/
+}
+
+#kananOdon {
+margin-top: 5px;
+float:left;
+width: 50px;
+height: 58px;
+/*background-color: #666;*/
+}
+
+#sliderLagiOdon {
+margin-top: 400px;
+width:100%;
+position: absolute;
+/*background-color: #666;*/
+}
+
+
+#kiriLagiOdon {
+margin-top: 5px;
+float:left;
+width: 750px;
+height: 800px;
+margin-left:700px;
+/*background-color: #615;*/
+}
+
+#kananLagiOdon {
+margin-top: 25px;
+float:right;
+width: 900px;
+height: 800px;
+/*background-color: #666;*/
+}
+
+
+/* atas css buat tindakan */
+
+
+#tablewrapper {width:100%; margin:0 auto}
+#tableheader {height:30px}
+.search {float:center; padding:5px; border:1px solid #c6d5e1; background:#fff}
+#tableheader select {float:center; font-size:11px; width:100px; padding:2px 2px 2px}
+#tableheader input {float:center; font-size:11px; width:150px; padding:2px 2px 2px; margin-left:0px}
+.details {float:right; padding-top:10px}
+.details div {float:left; margin-left:0px; font-size:12px}
+.tinytable {width:100%; border-left:1px solid #000000; border-top:1px solid #000000; border-bottom:none}
+.tinytable th {background-color:#c9c9c9; text-align:center; color:#000000; border:1px solid #000000; border-right:none}
+.tinytable th h3 {font-size:12px; padding:3px 5px 5px}
+.tinytable td {padding:4px 6px 6px; border-bottom:1px solid #000000; border-right:1px solid #000000}
+.tinytable .head h3 {background:url(image/sort.gif) 7px center no-repeat; cursor:pointer; padding-left:18px}
+.tinytable .desc, .sortable .asc {background:url(image/header-selected-bg1.gif)}
+.tinytable .desc h3 {background:url(image/desc.gif) 7px center no-repeat; cursor:pointer; padding-left:18px}
+.tinytable .asc h3 {background:url(image/asc.gif) 7px  center no-repeat; cursor:pointer; padding-left:18px}
+.tinytable .head:hover, .tinytable .desc:hover, .tinytable .asc:hover {color:#fafafa}
+.tinytable .evenrow td {background:#fafafa}
+.tinytable .oddrow td {background:#dde8ad}
+.tinytable td.evenselected {background:#fafafa}
+.tinytable td.oddselected {background:#dde8ad}
+.tinytable tfoot {background:#fff; font-weight:bold}
+.tinytable tfoot td {padding:6px 8px 8px}
+#tablefooter {height:15px; margin-top:15px}
+#tablenav {float:center}
+#tablenav img {cursor:pointer}
+#tablenav div {float:center; margin-right:15px}
+#tablelocation {float:center; font-size:12px}
+#tablelocation select {margin-right:3px}
+#tablelocation div {float:center; margin-left:15px}
+.page {margin-top:2px; font-style:italic}
+#selectedrow td {background:#c8c8c8}
+
+/* css buat rekam medik e */
+
+
+.menubody{
+
+}
+
+.menubottom {
+	background-image:    	 url(images/submenu_bg.png);
+	background-repeat:   	no-repeat;
+}
+.menuleft {
+    font-size:        		10px;
+	color:					#333333;
+	background-image:    	 url(images/submenu_btn.png);
+	background-repeat:   	repeat-y;
+	font-weight: 			bold;
+}
+
+.menuleft_bawah {
+    font-size:        		6px;
+	color:					#333333;
+	background-image:    	 url(images/submenu_btn_bawah.png);	
+	font-weight: 			bold;	
+}
+
+.menutop {
+	font-size: 11px;
+	color:               #FFFFFF;
+	background-color:    #000e98;
+	background-image:     url(images/bg_topmenu.png);
+	background-repeat:	repeat-x;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-align: center;
+	height: 25px;
+	background-position: left top;
+	cursor:pointer;
+}
+
+.img-button {
+    cursor:     pointer;
+    border:     0px;
+}
+
+.menuleft a:link, a:visited, a:active {
+    font-size:        12px;
+    text-decoration:  none;
+    color:            #333333;
+}
+
+.menuleft a:hover {
+    font-size:        12px;
+	text-decoration:  none;
+    color:            #6600CC;
+}
+
+label {
+	font-size: 10px;
+	font-weight: lighter;
+}
+
+
+table {
+    font-size:        12px;
+    	border-collapse : collapse;
+	border-style: none;
+	border-color: #FFFFFF;
+}
+
+.caption {
+	font-size: 10px;
+	font-style: normal;
+}
+
+a:link, a:visited, a:active {
+    font-size:        10px;
+    text-decoration:  none;
+    color:            #1F457E;
+
+}
+
+a:hover {
+    font-size:        10px;
+    color:            #8897AE;
+}
+
+.titlecaption {
+	font-size: 12px;
+	font-style: oblique;
+	font-weight: bolder;
+
+}
+
+.tableheader {
+	font-size: 12px;
+	color:               #333333;
+	background-color:    #c9c9c9;
+	background-repeat:	repeat-x;
+	font-weight: bold;
+	text-transform: uppercase;
+	height: 25px;
+	background-position: left top;
+}
+
+.tablesmallheader {
+	font-size: 10px;
+	color:               #333333;
+	background-color:    #fafafa;
+	background-repeat:	repeat-x;
+	font-weight: bold;
+	height: 18px;
+	background-position: left top;
+}
+
+.tablecontent {
+	font-size: 12px;
+	font-weight: lighter;
+	background-color: #a0c0a0;
+	height: 18px;
+}
+
+.tablecontent-medium {
+	font-size: 16px;
+	font-weight: lighter;
+	background-color:    #DEF0FE;
+	height: 18px;
+}
+
+.tablecontent-gede {
+	font-size: 23px;
+	font-weight: lighter;
+	background-color:    #DEF0FE;
+	height: 18px;
+}
+
+.tablecontent-odd {
+	font-size: 12px;
+	font-weight: lighter;
+	height: 18px;
+	background-color: #EFEFEF;
+}
+
+.tablecontent-odd-medium {
+	font-size: 16px;
+	font-weight: lighter;
+	height: 18px;
+}
+
+.tablecontent-odd-gede {
+	font-size: 23px;
+	font-weight: lighter;
+	height: 18px;
+}
+
+.content {
+	font-size: 10px;
+	background-color:    #E7E6FF;
+	height: 18px;
+}
+
+.content-odd {
+	font-size: 10px;
+	height: 18px;
+}
+
+.subheader {
+	font-size: 11px;
+	color:               #000000;
+	background-color:    #c2c6d3;
+	background-image:     url(images/tbl_subheader.png);
+	background-repeat:	repeat-x;
+	font-weight: bolder;
+	height: 18;
+	text-transform: capitalize;
+}
+
+.subheader-height {
+	font-size: 10px;
+	color:               #000000;
+	background-color:    #c2c6d3;
+	background-image:     url(images/tbl_subheader_height.png);
+	background-repeat:	repeat-x;
+	font-weight: bolder;
+	height: 27;
+	text-transform: capitalize;
+}
+
+.subheader-print {
+    font-size:          10px;
+    color:              #000000;
+    font-weight:        bolder;
+    height:             18;
+}
+
+.staycontent {
+	font-size: 10px;
+	font-weight: lighter;
+}
+
+.button, reset {
+	font-size: 10px;
+	border : 1px solid #666666;
+	font-style: normal;
+	background-color: #EEF0F4;
+	color: #000000;
+}
+
+.submit {
+  font:bold 11px/17px Arial, sans-serif;
+  color: #000;
+  height:30px;
+  text-transform: uppercase;
+  text-shadow: #fff 1px 1px;
+  border: 1px solid #333;
+  cursor:pointer;
+  margin-top: 10px;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f0f0f0), to(#e0e0e0));
+  background: -moz-linear-gradient(top, #f0f0f0, #e0e0e0);
+  -webkit-border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+}
+
+.submit:hover {
+color: #fff;
+text-shadow: #000 1px 1px;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#333));  
+  background: -moz-linear-gradient(top, #333, #333);
+  cursor:pointer;
+  -moz-box-shadow: 0px 0px 2px #000;
+  -moz-border-radius: 5px 5px 5px 5px ;
+  -webkit-box-shadow: 0px 0px 2px #000;
+  -webkit-border-radius: 5px 5px 5px 5px
+  
+}           
+
+input, textarea {
+	font-size: 11px;
+	border: 1px solid #333;
+	text-indent:	1px;
+	margin: 2px;
+	left: 0px;
+	vertical-align: middle;
+}
+input:hover {
+	-webkit-box-shadow: 0px 0px 2px 2px #d7d7d7;
+}
+
+
+.subtitlecaption {
+	font-size: 10px;
+	font-style: normal;
+	font-weight: 500;
+}
+
+.inputcontent {
+	font-size: 10px;
+	font-weight: lighter;
+	background : #E6EDFB url(../none);
+	border: none;
+	text-align: right;
+}
+
+.hlink {
+	font-size: 12px;
+}
+
+.navActive {
+	color:  #cc0000;
+}
+
+fieldset {
+	border: thin solid gray;
+	color: black;
+}
+
+.whiteborder {
+	border: none;
+	margin: 0px 0px;
+	padding: 0px 0px;
+	border-collapse : collapse;
+}
+
+.adaborder {
+	border-left: none;
+	border-top: none;
+	border-bottom: none;
+	border-right: solid #999999 1px;
+	margin: 0px 0px;
+	padding: 0px 0px;
+	border-collapse : separate;
+}
+
+.divcontent {
+	font-size: 10px;
+	font-weight: lighter;
+	background-color:    #E7E6FF;
+	border-bottom: solid #999999 1px;
+	border-right: solid #999999 1px;
+}
+
+.curedit {
+	text-align: right;
+}
+
+.tabaktif {
+	font-size: 10px;
+	color:               #E60000;
+	background-color:    #c2c6d3;
+	background-image:     url(images/tbl_subheadertab.png);
+	background-repeat:	repeat-x;
+	font-weight: bolder;
+	height: 18;
+	text-transform: capitalize;
+}
+
+.tabpasif {
+	font-size: 10px;
+	color:               #000000;
+	background-color:    #c2c6d3;
+	background-image:     url(images/tbl_subheader2.png);
+	background-repeat:	repeat-x;
+	font-weight: bolder;
+	height: 18;
+	text-transform: capitalize;
+}
+
+#top {
+height:40px; width:100%; position:fixed;
+background: -moz-linear-gradient(top, #c5d57d, #a0b282);  
+background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#a0b282), to(#c5d57d)); 
+border-bottom:1px solid #c6c6c6;
+box-shadow: 1px 1px 1px 1px#d7d7d7; /* CSS3 */
+-webkit-box-shadow: 1px 1px 1px 1px #d7d7d7; 
+}
+#printMessage {display: none;}
+#modalContainer {
+	background-color:transparent;
+	position:absolute;
+	width:100%;
+	height:100%;
+	top:0px;
+	left:0px;
+	z-index:10000;
+	background-image:url(images/transparent.gif); /* required by MSIE to prevent actions on lower z-index elements */
+}
+
+#alertBox {
+	position:relative;
+	width:300px;
+	min-height:50px;
+	margin-top:50px;
+	border:2px solid #000;
+	background-color:#DEF0FE;
+	background-image:url(images/alert.png);
+	background-repeat:no-repeat;
+	background-position:20px 30px;
+}
+
+#alertBox2 {
+	position:relative;
+	display:block;
+}
+
+#modalContainer > #alertBox {
+	position:fixed;
+}
+
+#alertBox h1 {
+	font-size: 12px;
+	color:               #000000;
+	background-color:    #c2c6d3;
+	background-image:     url(images/tbl_subheader.png);
+	background-repeat:	repeat-x;
+	font-weight: bolder;
+	height: 18;
+}
+
+#alertBox p {
+	display:block;
+	font:10px verdana,arial;
+	min-height:20px;
+	padding-left:5px;
+	margin-left:55px;
+}
+
+/* unrelated styles */
+
+#mContainer {
+	position:relative;
+	width:600px;
+	margin:auto;
+	padding:5px;
+	border-top:2px solid #000;
+	border-bottom:2px solid #000;
+	font:0.7em verdana,arial;
+}
+
+h1,h2 {
+	margin:0;
+	padding:4px;
+	font:bold 1.5em verdana;
+	border-bottom:1px solid #000;
+}
+
+code {
+	font-size:1.2em;
+	color:#069;
+}
+
+#credits {
+	position:relative;
+	margin:25px auto 0px auto;
+	width:350px; 
+	font:0.7em verdana;
+	border-top:1px solid #000;
+	border-bottom:1px solid #000;
+	height:90px;
+	padding-top:4px;
+}
+
+#credits img {
+	float:left;
+	margin:5px 10px 5px 0px;
+	border:1px solid #000000;
+	width:80px;
+	height:79px;
+}
+
+.important {
+	background-color:#F5FCC8;
+	padding:2px;
+}
+
+code span {
+	color:green;
+}
+
+.tombol{
+	font:bold 11px/17px Arial, sans-serif;
+  color: #000;
+  text-transform: uppercase;
+  text-shadow: #fff 1px 1px;
+  border: 1px solid #4687ff;
+  margin-top: 10px;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f0f0f0), to(#e0e0e0));
+  -webkit-border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+}.tombol:hover{
+	background:#FF6666;
+	color:#fff;
+}
+
+
+
+/*----------------------
+	Camera slide up
+-----------------------*/
+#camera{
+	background-image:url('img/cam_bg.jpg');
+  background-repeat: repeat-y 700px;
+	border:1px solid #f0f0f0;
+	height:600px;
+	width:350px;
+	position:fixed;
+  bottom: -990px;
+  overflow:hidden;
+	left:52%;
+	margin:0 auto;
+}
+
+.camTop{
+	background:url('img/min.png') no-repeat center right;
+  width:100%;
+	height:66px;
+	position:absolute;
+	top:0;
+	cursor:pointer;
+  right: 5px;
+ 
+}
+
+.camTops{
+	background:no-repeat center center;
+}
+
+.settings{
+	background:url('img/settings.png') no-repeat;
+	cursor: pointer;
+	height: 28px;
+	position: absolute;
+	right: 5px;
+	top: 320px;
+	width: 30px;
+}
+
+.settings:hover{
+	background-position:left bottom;
+}
+
+#screen{
+	width:350px;
+	height:250px;
+	margin: 66px auto 22px;
+	background:#ccc;
+	line-height: 360px;
+  text-align: center;
+	color:#666;
+}
+
+.buttonPane{
+	text-align: center;
+}
+
+.blueButton,
+.greenButton{
+	background:url('img/buttons.png') no-repeat;
+	text-shadow:1px 1px 1px #277c9b;
+	color:#fff !important;
+	width:99px;
+	height:38px;
+	border:none;
+	text-decoration:none;
+	display:inline-block;
+	font-size: 16px;
+	line-height: 32px;
+	text-align: center;
+	margin: 0 4px;
+}
+
+.greenButton{
+	background:url('img/buttons.png') no-repeat right top;
+	text-shadow:1px 1px 1px #498917;
+}
+
+.blueButton:hover,
+.greenButton:hover{
+	background-position:left bottom;
+	text-decoration:none !important;
+}
+
+.greenButton:hover{
+	background-position:right bottom;
+}
+
+.blueButton:active,
+.greenButton:active{
+	position:relative;
+	bottom:-1px;
+}
+
+.hidden{
+	display:none;
+}
+.prev{
+border:none;
+width:20px; height:30px;
+background:url(../../gambar/prev.png);
+}
+.next{
+border:none;
+width:20px; height:30px;
+background:url(../../gambar/nextt.png);
+}
+.helpicon{
+position:fixed;
+bottom:0; right:0;
+}
+
+#gb{
+position: fixed;
+bottom:0; right:0;
+}
+.gbcontent{
+float:right; 
+padding:0 ; margin:0;
+}

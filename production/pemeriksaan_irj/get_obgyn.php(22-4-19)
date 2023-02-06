@@ -1,0 +1,204 @@
+ 	<?php
+	// Library
+	require_once("../penghubung.inc.php");
+	require_once($LIB."login.php");
+	require_once($LIB."datamodel.php");
+	require_once($LIB."dateLib.php");
+	require_once($LIB."currency.php");
+	require_once($LIB."encrypt.php");
+	require_once($LIB."tampilan.php");
+
+	// Inisialisasi Lib
+	$view = new CView($_SERVER['PHP_SELF'],$_SERVER['QUERY_STRING']);
+	$dtaccess = new DataAccess();
+	$auth = new CAuth();
+	$enc = new textEncrypt();
+	$userData = $auth->GetUserData();
+	$userName = $auth->GetUserName();
+	$userId = $auth->GetUserId();
+	$depId = $auth->GetDepId();
+	$poliId = $auth->IdPoli();
+	$tglSekarang = date("d-m-Y");
+	$depLowest = $auth->GetDepLowest();
+	$rspns = [];
+
+	$sql = "SELECT rawat_anamnesa, rawat_pemeriksaan_fisik, rawat_obgyn FROM klinik.klinik_perawatan WHERE rawat_id = ".QuoteValue(DPE_CHAR, $_GET['rawat_id']);
+	$dataObgyn = $dtaccess->Fetch($sql);
+
+	$sql = "select * from klinik.klinik_anamnesa_tb where id_rawat=".QuoteValue(DPE_CHAR,$_GET['rawat_id']);
+	$qAnamnesa = $dtaccess->FetchAll($sql);
+
+	$sql_ttv = "SELECT anamnesa_isi_nilai FROM klinik.klinik_anamnesa_isi WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_header_anamnesa = 'f003'";
+	$dataTtv = $dtaccess->FetchAll($sql_ttv);
+
+	$sql_cek = "SELECT anamnesa_isi_nilai FROM klinik.klinik_anamnesa_isi WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '23140f06a7534173b03c939c58360bd3'";
+	$dataCek = $dtaccess->Fetch($sql_cek);
+
+	$sql_obs = "SELECT anamnesa_isi_nilai FROM klinik.klinik_anamnesa_isi WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '737d2ef46a15be00ddfa680b84d60556'";
+	$dataObs = $dtaccess->Fetch($sql_obs);
+
+	$sql_pendarahan = "SELECT anamnesa_isi_nilai FROM klinik.klinik_anamnesa_isi WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = 'c8c6ef91d4b0268ab846d8efad5e2654'";
+	$dataPendarahan = $dtaccess->Fetch($sql_pendarahan);
+
+	$sql_pendarahan_gin = "SELECT anamnesa_isi_nilai FROM klinik.klinik_anamnesa_isi WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = 'd750e8ba437bd00db95aee528496a52f'";
+	$dataPendarahanGin = $dtaccess->Fetch($sql_pendarahan_gin);
+
+	$sql_letak_anak = "SELECT anamnesa_isi_nilai FROM klinik.klinik_anamnesa_isi WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = 'cb155cdaee721f191fbdbfbd18b7d060'";
+	$dataLetakAnak  = $dtaccess->Fetch($sql_letak_anak);
+
+	$sql_flour_albus = "SELECT anamnesa_isi_nilai FROM klinik.klinik_anamnesa_isi WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '431acfbabea3b38739fb2228096bde32'";
+	$dataFlourAlbus  = $dtaccess->Fetch($sql_flour_albus);
+
+	$sql_kesadaran = "SELECT anamnesa_isi_nilai FROM klinik.klinik_anamnesa_isi WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '41ec7ec353ff8a0607a4eade4d893023'";
+	$dataKesadaran  = $dtaccess->Fetch($sql_kesadaran);
+
+	$sql_keadaan = "SELECT anamnesa_isi_nilai FROM klinik.klinik_anamnesa_isi WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = 'F33'";
+	$dataKeadaanUmumPasien  = $dtaccess->Fetch($sql_keadaan);
+
+	$sql_hpht = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '737d2ef46a15be00ddfa680b84d60556' AND id_anamnesa_detail = '973a5546f1c490e800f3395350855d51' and anamnesa_isi_detail_nilai not like '%Hari%'";
+	$dataHpht = $dtaccess->Fetch($sql_hpht);
+
+	$sql_FU = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = 'cb155cdaee721f191fbdbfbd18b7d060' AND id_anamnesa_detail = 'a9e2977ec5f1ed34dac3c39d9283e410'";
+	$dataFU = $dtaccess->Fetch($sql_FU);
+
+	$sql_Amenore_bln = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '737d2ef46a15be00ddfa680b84d60556' AND id_anamnesa_detail = '9c457745a8c2cb2aada166b13dbf7eea'";
+	$dataAmenoreBln = $dtaccess->Fetch($sql_Amenore_bln);
+
+	$sql_Amenore_hari = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '737d2ef46a15be00ddfa680b84d60556' AND id_anamnesa_detail = '9c457745a8c2cb2aada166b13dbf7eea'";
+	$dataAmenoreHari = $dtaccess->Fetch($sql_Amenore_hari);
+
+	$sql_Haid_Lama = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '398830c9f9c76bd03e5cdf7134844d84' AND id_anamnesa_detail = '98919bbecefe91b12a3fa3e8be482a96'";
+	$dataHaidLama = $dtaccess->Fetch($sql_Haid_Lama);
+
+	$sql_Haid_Lama_Banyak = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '398830c9f9c76bd03e5cdf7134844d84' AND id_anamnesa_detail = '419ea98178f1860e2dbd28c88fb670ef'";
+	$dataHaidLamaBanyak = $dtaccess->Fetch($sql_Haid_Lama_Banyak);
+
+	$sql_Hadi_Bulan = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '398830c9f9c76bd03e5cdf7134844d84' AND id_anamnesa_detail = 'd659c1735d5ee3fcefc0275e75034a2a'";
+	$dataHaidBulan = $dtaccess->Fetch($sql_Hadi_Bulan);
+
+	$sql_Terus_menerus = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '398830c9f9c76bd03e5cdf7134844d84' AND id_anamnesa_detail = '94ede817be4b736c75ab9d59ba814e6f'";
+	$dataTerusmenerus = $dtaccess->Fetch($sql_Terus_menerus);
+
+	$sql_Terus_menerus_hari = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = 'd750e8ba437bd00db95aee528496a52f' AND id_anamnesa_detail = '146e40877b688610c0e77159ea04501a'";
+	$dataTerusmenerushari = $dtaccess->Fetch($sql_Terus_menerus_hari);
+
+	$sql_Berapa_lama = "SELECT anamnesa_isi_detail_nilai FROM klinik.klinik_anamnesa_isi_detail WHERE id_rawat = ".QuoteValue(DPE_CHAR, $_GET['rawat_id'])." AND id_anamnesa = '431acfbabea3b38739fb2228096bde32' AND id_anamnesa_detail = '27e1924c90ea083656835f31c1672887'";
+	$dataBerapaLama = $dtaccess->Fetch($sql_Berapa_lama);
+
+	$HPL = date('Y-m-d', strtotime('+280 days', strtotime(date_db($dataHpht['anamnesa_isi_detail_nilai']))));
+
+	$obs = explode(';', $dataObs['anamnesa_isi_nilai']);
+	$mual = $obs[13];
+	$muntah = $obs[14];
+	$pusing = $obs[18];
+	$perut_sakit = $obs[22];
+
+	$pendarah = explode(';', $dataPendarahan['anamnesa_isi_nilai']);
+	$sedikit = $pendarah[0];
+	$banyak = $pendarah[1];
+
+	$pendarahGin = explode(';', $dataPendarahanGin['anamnesa_isi_nilai']);
+	$sedikitGin = $pendarahGin[0];
+	$banyakGin = $pendarahGin[1];
+
+	$letak_anak = explode(';', $dataLetakAnak['anamnesa_isi_nilai']);
+	$kepala = $letak_anak[0];
+	$sungsang = $letak_anak[1];
+	$ablique = $letak_anak[2];
+	$lintang = $letak_anak[3];
+
+	$FlourAlbus = explode(';', $dataFlourAlbus['anamnesa_isi_nilai']);
+	$gatal = $FlourAlbus[0];
+	$tidak_gatal = $FlourAlbus[1];
+	$bau = $FlourAlbus[2];
+	$tidak_bau = $FlourAlbus[3];
+	$campur_darah = $FlourAlbus[4];
+	$Lainnya = $FlourAlbus[5];
+	$perut_sakitt = $FlourAlbus[7];
+	$tumor = $FlourAlbus[8];
+	$myom_uteri = $FlourAlbus[9];
+	$kista_ovari = $FlourAlbus[10];
+	$ca_cx = $FlourAlbus[11];
+	$lainnya = $FlourAlbus[12];;
+
+	$dataAnamnesa = array();
+	$TTV = array();
+
+	foreach ($qAnamnesa as $rs){
+		$a = unserialize($rs['anamnesa_tb_isi']);
+		foreach ($a as $k => $aa) {
+			$row[ $k ] = $aa['value'];
+		}
+		$dataAnamnesa[] = $row;
+	}
+
+	$id[] = "keadaan_umum_pasien";
+	$id[] = "kesadaran";
+	$id[] = "tekanan_darah_sistole";
+	$id[] = "tekanan_darah_diastole";
+	$id[] = "nadi";
+	$id[] = "pernafasan";
+	$id[] = "suhu_badan";
+	$id[] = "berat_badan";
+	$id[] = "tinggi_badan";
+	$id[] = "mata";
+	$id[] = "leher_tvj";
+	$id[] = "leher";
+	$id[] = "payudara";
+
+	foreach ($dataTtv as $key => $val) {
+		$objective['id'] = $id[$key];
+		$objective['anamnesa_isi_nilai'] = $val['anamnesa_isi_nilai'];
+		array_push($TTV, $objective);
+	}
+
+	$rspns['keluhanUtama'] = $dataObgyn['rawat_anamnesa'];
+	$rspns['cek'] = $dataCek['anamnesa_isi_nilai'];
+	$rspns['hpht'] = $dataHpht['anamnesa_isi_detail_nilai'];
+	$rspns['FU'] = $dataFU['anamnesa_isi_detail_nilai'];
+	$rspns['AmenoreBln'] = $dataAmenoreBln['anamnesa_isi_detail_nilai'];
+	$rspns['AmenoreHari'] = $dataAmenoreHari['anamnesa_isi_detail_nilai'];
+	$rspns['HailLama'] = $dataHaidLama['anamnesa_isi_detail_nilai'];
+	$rspns['HaidLamaBanyak'] = $dataHaidLamaBanyak['anamnesa_isi_detail_nilai'];
+	$rspns['HaidBulan'] = $dataHaidBulan['anamnesa_isi_detail_nilai'];
+	$rspns['TerusMenerus'] = $dataTerusmenerus['anamnesa_isi_detail_nilai'];
+	$rspns['TerusMenerusHari'] = $dataTerusmenerushari['anamnesa_isi_detail_nilai'];
+	$rspns['BerapaLama'] = $dataBerapaLama['anamnesa_isi_detail_nilai'];
+	$rspns['hpl'] = date_db($HPL);
+	$rspns['tb'] = $dataAnamnesa;
+	$rspns['ttv'] = $TTV;
+	$rspns['mual'] = $mual;
+	$rspns['muntah'] = $muntah;
+	$rspns['pusing'] = $pusing;
+	$rspns['sedikit'] = $sedikit;
+	$rspns['banyak'] = $banyak;
+	$rspns['sedikitGin'] = $sedikitGin;
+	$rspns['banyakGin'] = $banyakGin;
+	$rspns['kepala'] = $kepala;
+	$rspns['sungsang'] = $sungsang;
+	$rspns['ablique'] = $ablique;
+	$rspns['lintang'] = $lintang;
+	$rspns['keadaan_umum_pasien'] = $dataKeadaanUmumPasien["anamnesa_isi_nilai"];
+	$rspns['kesadaran'] = $dataKesadaran["anamnesa_isi_nilai"];
+
+	$rspns['gatal'] = $gatal;
+	$rspns['tidak_gatal'] = $tidak_gatal;
+	$rspns['bau'] = $bau;
+	$rspns['tidak_bau'] = $tidak_bau;
+	$rspns['campur_darah'] = $campur_darah;
+	$rspns['Lainnya'] = $Lainnya;
+	$rspns['perut_sakitt'] = $perut_sakitt;
+	$rspns['tumor'] = $tumor;
+	$rspns['myom_uteri'] = $myom_uteri;
+	$rspns['kista_ovari'] = $kista_ovari;
+	$rspns['ca_cx'] = $ca_cx;
+	$rspns['lainnya'] = $lainnya;
+	$rspns['perut_sakit'] = $perut_sakit;
+	$rspns['dataObgyn'] = unserialize($dataObgyn['rawat_obgyn']);
+
+	// echo '<pre>';
+	// print_r($rspns);
+	// echo '</pre>';
+
+	echo json_encode($rspns);
+?>

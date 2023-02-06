@@ -1,0 +1,4 @@
+#footer, #header{
+background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#000));
+background: -moz-linear-gradient(top, #333, #000); 
+}

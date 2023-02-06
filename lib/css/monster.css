@@ -1,0 +1,160 @@
+/* ---------------------------- wrapper ---------------------------- */
+#wrapper {
+	z-index: 11;
+	position:relative;
+	top: 100px;
+	left: 200px;
+	-webkit-transition: -webkit-transform .3s cubic-bezier(.1, 0, 0, 1);
+	   -moz-transition:    -moz-transform .3s cubic-bezier(.1, 0, 0, 1);
+		 -o-transition: 	 -o-transform .3s cubic-bezier(.1, 0, 0, 1);
+			transition: 		transform .3s cubic-bezier(.1, 0, 0, 1);
+}
+#wrapper:after { /* shadow */
+	content: "";
+	z-index: -1;
+	position: absolute;
+	width: 100px; height: 100px;
+	margin-left: -50px;
+	border-radius: 50px;
+	
+	-webkit-box-shadow: hsla(210,0%,0%,.8) 0 200px 100px 1px;
+	   -moz-box-shadow: hsla(210,0%,0%,.8) 0 200px 100px 1px;
+		 -o-box-shadow: hsla(210,0%,0%,.8) 0 200px 100px 1px;
+			box-shadow: hsla(210,0%,0%,.8) 0 200px 100px 1px;
+	
+	-webkit-transform: translateY(-160px) scale(1.4, .5);
+	   -moz-transform: translate( -50px, -160px) scale(1.2, .5);
+		 -o-transform: translateY(-160px) scale(1.4, .5);
+			transform: translateY(-160px) scale(1.4, .5);
+}
+/* ---------------------------- monster ---------------------------- */
+#monster {
+	z-index: 1;
+	position: relative;
+	width: 240px;
+	height: 240px;
+	margin: -120px 0 0 -100px;
+	border-radius: 100px 100px 50px 50px / 10px 10px 0px 0px;
+	
+	text-align: center;
+	
+	background:url(gambar/dento.png) no-repeat;
+	
+	-webkit-transform-origin: bottom;
+	   -moz-transform-origin: bottom;
+		 -o-transform-origin: bottom;
+			transform-origin: bottom;
+	
+	-webkit-box-reflect: below -3px -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, 
+									color-stop(0.6, rgba(0,0,0,.2) ), to( transparent ));
+	
+	-webkit-transform: scale3d(1, 1, 1); /* fixes the reflection after scaling */
+	
+	-webkit-transition: background-color .5s ease-out;
+	   -moz-transition: background-color .5s ease-out;
+		 -o-transition: background-color .5s ease-out;
+			transition: background-color .5s ease-out;
+}
+/* ---------------------------- eyes ---------------------------- */
+
+
+.eye {
+	position: relative; float:left;
+	width: 50px;
+	height: 50px;
+	
+	top: 60px; left:55px;
+
+	border-radius: 50px / 50px;
+
+	background-color: #fff;
+
+	-webkit-box-shadow: inset rgba(0,0,0,.4) 0 -1px 3px 1px, inset rgba(0,0,0,.5) 0 -5px 20px,  rgba(0,0,0,.5) 0 -5px 10px, rgba(255,255,255,.5) 0 5px 10px;
+	   -moz-box-shadow: inset rgba(0,0,0,.4) 0 -1px 3px 1px, inset rgba(0,0,0,.5) 0 -5px 20px,  rgba(0,0,0,.5) 0 -5px 10px, rgba(255,255,255,.5) 0 5px 10px;
+		 -o-box-shadow: inset rgba(0,0,0,.4) 0 -1px 3px 1px, inset rgba(0,0,0,.5) 0 -5px 20px,  rgba(0,0,0,.5) 0 -5px 10px, rgba(255,255,255,.5) 0 5px 10px;
+			box-shadow: inset rgba(0,0,0,.4) 0 -1px 3px 1px, inset rgba(0,0,0,.5) 0 -5px 20px,  rgba(0,0,0,.5) 0 -5px 10px, rgba(255,255,255,.5) 0 5px 10px;
+		
+	background-repeat: no-repeat;
+						
+	background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 40, 
+						color-stop(.12, rgba(0,0,0,1) ),
+						color-stop(.22, hsl(190,50%,50%) ),
+						color-stop(.4, hsl(200,50%,30%) ),
+						color-stop(.5, rgba(255,255,255,0) )
+						);
+	background-image: -moz-radial-gradient(50% 50% 0deg, circle, rgba(0,0,0,1) 12%,rgba(0,0,0,0) 50% );
+	background-image:   -o-radial-gradient(50% 50% 0deg, circle, rgba(0,0,0,1) 12%,rgba(0,0,0,0) 50% );
+	background-image: 	   radial-gradient(50% 50% 0deg, circle, rgba(0,0,0,1) 12%,rgba(0,0,0,0) 50% );
+	
+}
+.eye:before { /* highlight */
+	content: "";
+	position: absolute;
+	top: 20%;
+	left: 32%;
+	border-radius: 5px;
+	width: 10px; height: 10px;
+	background-color: #fff;
+	
+	-webkit-transform: skewX(-10deg);
+	   -moz-transform: skewX(-10deg);
+		 -o-transform: skewX(-10deg);
+			transform: skewX(-10deg);
+}
+
+.eye .lid {
+	position: absolute;
+	border-radius: inherit;
+	width: inherit; height: inherit;
+	
+	background-color: rgba(94,151,237,0.8);
+	-webkit-box-shadow: inset rgba(0,0,0,.2) 0 -1px 3px 1px, inset rgba(0,0,0,.5) 0 -5px 20px, rgba(0,0,0,.6) 0 1px 2px;
+	
+	background-image: -webkit-gradient(radial, 50% 10%, 0, 50% 30%, 40, 
+						color-stop( 0, rgba(255,255,255,.8) ),
+						color-stop(.8, rgba(255,255,255, 0) ),
+						color-stop(.8, rgba(0,0,0, 0) ), 
+						color-stop( 1, rgba(0,0,0,.33) )), 
+						url(noise.png);
+	background-image: -moz-radial-gradient(50% 20% 0deg, rgba(255,255,255,.8) 0%, rgba(255,255,255, 0) 80%, rgba(0,0,0, 0) 80%, rgba(0,0,0,.33) 100% ), url(noise.png);
+	background-image:   -o-radial-gradient(50% 20% 0deg, rgba(255,255,255,.8) 0%, rgba(255,255,255, 0) 80%, rgba(0,0,0, 0) 80%, rgba(0,0,0,.33) 100% ), url(noise.png);
+
+	
+		
+  	-webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: 0px 0px;
+  	-webkit-mask-image: -webkit-gradient(radial, 50% 120%, 20, 50% 120%, 50, 
+    				color-stop(.5, rgba(0,0,0,0)),
+    				color-stop(.6, rgba(0,0,0,1)) 
+    				);
+    -webkit-transform: translate3d(0,0,0); /* fixes a render bug */ 
+    
+}
+
+
+/* ---------------------------- states ---------------------------- */
+
+/* sleep */
+.sleep .eye {
+  	background-position: 0 -40px;
+}
+.sleep .lid {
+  	-webkit-mask-image: -webkit-gradient(radial, 50% 200%, 20, 50% 200%, 50, color-stop(.5, rgba(0,0,0,0)), color-stop(.6, rgba(0,0,0,1)) );
+}
+.sleep #mouth { 
+	height: 50px;
+	background-position: center bottom;
+	-webkit-animation: sleep-mouth 2.5s 0 infinite alternate cubic-bezier(.3, 0, .5, 1); 
+}
+.sleep #monster {
+	-webkit-animation: sleep-monster 2.5s 0 infinite alternate cubic-bezier(.5, 0, .3, 1);
+}
+/* hungry */
+.hungry .lid {
+	-moz-transform: scaleY(0); /* hide for browsers without mask-image */ 
+    -o-transform: 	scaleY(0); /* hide for browsers without mask-image */ 
+}
+.eat .lid {
+  	display: none;
+}
+

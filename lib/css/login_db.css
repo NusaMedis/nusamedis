@@ -1,0 +1,24 @@
+body{margin: 0; padding: 0; background: #b8c0b7}
+input[type="text"],input[type="password"]{ padding: 5px; background: #fff;width: 100%; height: 40px; margin-bottom: 20px; border: 1px solid #fff; font-size: 25px;}
+input[type="text"],input[type="password"], .error{
+	-webkit-border-radius: 5px; 
+	   -moz-border-radius: 5px; 
+	   		border-radius: 5px;
+}
+input[type="submit"]{ cursor: pointer; padding: 5px 12px; text-align: center; background: #272923; color: #fff; text-transform: uppercase; font-weight: bold;
+border:1px solid #024c00;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+}
+input[type="submit"]:hover{ background: #172005}
+label{ float: left; color: #fff; font-family: arial; font-weight: bold; text-shadow:1px 1px #000;}
+#main{ width: 100%; margin-top: 100px; }
+.logo{ background: url('logo.png'); width: 184; height: 73px;}
+.form{ padding:20px; top: 100px; width: 300px; }
+.error{ background: #fffce5; border: 3px solid #e3cb00; max-width: 100%; font-family: arial; padding: 10px; margin-bottom: 20px; font-size: 14px;}
+
+@media only screen and (max-device-width:640px) and (max-device-width:320px){
+#main{  margin-top: 20px; padding: 0;}
+.form{ padding:20px; top: 100px; width: 280px; }
+}

@@ -1,0 +1,60 @@
+@font-face{font-family: fontdefault;src: url('../font/sansation.ttf')}@font-face{font-family: calibri;src: url('../font/calibri.ttf')}
+* { font-family: fontdefault; }
+* a{text-decoration:none;}
+body{padding:0;margin:0; font-family:calibri; }
+ul{margin:0; padding:0; list-style-type:none; font-size:0; line-height:0; }
+li { display: inline; margin: 0 3px; }
+.reminder{
+color:#FFFFFF;
+}
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------Button*/
+button{color: #fff; font-weight:bold; padding: 8px; background-color: #000960; border: none; margin-right: 25px; position: relative; cursor:pointer; margin-top:5px;-webkit-user-select: none; text-decoration:none; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+-webkit-box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.45), 0px 2px 2px rgba(200, 200, 200, 0.25);
+   -moz-box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.45), 0px 2px 2px rgba(200, 200, 200, 0.25);
+		box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.45), 0px 2px 2px rgba(200, 200, 200, 0.25);
+-webkit-border-radius: 3px;
+   -moz-border-radius: 3px;
+		border-radius: 3px;
+}
+button:active { position: relative; top: 3px;
+-webkit-box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.25), inset 0 0px 3px rgba(0, 0, 0, 0.9);
+   -moz-box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.25), inset 0 0px 3px rgba(0, 0, 0, 0.9);
+		box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.25), inset 0 0px 3px rgba(0, 0, 0, 0.9);
+}
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------Top*/
+#loading { position: absolute; top: 0; left: 48%; color: #fff; background-color: #000; padding: 5px 25px; font: 12px Arial; z-index:999; }
+#header {width:100%; position:fixed; height:45px; line-height:45px; padding:0; color:#fff; font-size:20px; font-family:calibri; text-align:center; z-index:9999; margin-top:0px; 
+	    -webkit-box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.5);
+	       -moz-box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.5);
+	    		box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.5);
+}
+#header a {color:#f3f3f3; text-decoration:none; font-weight:bold; text-shadow:0 -1px 0 rgba(0,0,0,0.5); }
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------Body*/
+#body{margin:0;}
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------Left*/
+#left {background:url(../../gambar/index.png); position:fixed; width:265px; margin:0; height:100%; z-index:0; float:left;padding-top:70px; }
+#left ul.nav{width:265px; height:50px; float:left; margin:0px; }
+#left ul.nav li{float:left; width:265px; height:50px; }
+#left ul.nav li a{display:block; font:bold 15px/50px Arial, sans-serif; color:#000; text-decoration:none; text-shadow: #fff 1px 1px; }
+#left ul.nav li a:hover{color:#fff; text-shadow: #000 1px 1px; background:url(../../gambar/menu_hover.png); }
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------Right*/
+#right {margin:30px 0 0 270px; padding:0;width: 73%; height:700px; float: left; }
+#tmbalur{top:47; right:0; position:absolute; } 
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------Footer*/
+#footer {bottom:0px; position:fixed; width:100%; margin:0 auto; height:45px;clear:both;
+	    -webkit-box-shadow: 0px -2px 3px 0px rgba(0, 0, 0, 0.5);
+	       -moz-box-shadow: 0px -2px 3px 0px rgba(0, 0, 0, 0.5);
+	    		box-shadow: 0px -2px 3px 0px rgba(0, 0, 0, 0.5);
+}
+#footer table {color:#FFFFFF;}
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------Kotak*/
+#kotak{background: #fff; margin:20px; padding: 5px 5px 5px 5px; height:100px; width:100px; float:left;
+-webkit-box-shadow: 0px 0px 6px #5e5e5e;
+   -moz-box-shadow: 0px 0px 6px #5e5e5e;
+		box-shadow: 0px 0px 6px #5e5e5e;
+-webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+		border-radius: 5px;
+}
+#kotak a{color:#000; text-decoration:none; font:bold 11px/17px Arial, sans-serif; }
+#kotak:hover, #kotak:active{background-color: #efefef; cursor: pointer;}
